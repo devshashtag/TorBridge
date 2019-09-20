@@ -1,12 +1,12 @@
-# --------------------------------------- #
-# - - - - - - - - - - - - - - - - - - - - #
-# - - - - - - -  TorBridge  - - - - - - - #
-# - - - - - - - Micro Robot - - - - - - - #
-# - - - - - - - - - - - - - - - - - - - - #
-# --------------------------------------- #
-# a simple tool for get tor bridge from   #
-# https://bridges.torproject.org/bridges  #
-# ----------------------------------------#
+* ---------------------------------------- *
+*                                          *
+*                TorBridge                 *
+*               Micro Robot                *
+*                                          *
+* ---------------------------------------- *
+#  a simple tool for get tor bridge from   #
+*  https://bridges.torproject.org/bridges  *
+* ---------------------------------------- *
 
 Usage:
     chmod +x ./TorBridge.sh
