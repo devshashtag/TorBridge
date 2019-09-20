@@ -1,51 +1,87 @@
-#!/bin/bash
-# --------------------------------------- #
-# - - - - - - - - - - - - - - - - - - - - #
-# - - - - - - -  TorBridge  - - - - - - - #
-# - - - - - - - Micro Robot - - - - - - - #
-# - - - - - - - - - - - - - - - - - - - - #
-# --------------------------------------- #
-# a simple tool for get tor bridge from   #
-# https://bridges.torproject.org/bridges  #
-# ----------------------------------------#
+#!/usr/bin/env bash
 
 HTML_FILE="img.html"
 IMAGE_FILE="captcha.jpg"
+BridgeFile="bridges"
+# requirements for run this script
+if [[ ! $(which feh) || ! $(which proxychains4) || ! $(which obfs4proxy) || ! $(which tor) ]]; then
+    echo -e "\e[31mCheck that programs are installed ? => ( proxychains4 , feh ,tor , obfs4proxy )\e[m "
+    exit 1
+fi
+
+if [[ $UID -ne 0 ]]; then 
+    echo -e "\e[31mThis script must be run as root\e[m " 
+    exit 1 
+fi
+
+# start and reset terminal
+#tput reset
+
+#functions 
+function ClearFiles() {
+    for file in $@; do
+        if [ -e $file ]; then
+            rm $file
+        fi
+    done
+}
 
 # get Captcha 
-proxychains -q curl -s "https://bridges.torproject.org/bridges?transport=obfs4" -o $HTML_FILE
+proxychains4 -q curl -s "https://bridges.torproject.org/bridges?transport=obfs4" -o $HTML_FILE
 
-proxychains -q curl ipecho.net/plain
+# net test
+[[ -z $(cat $HTML_FILE) ]] && echo "Error TOR" && exit 0
+
 # cut base64 Image challenge and convert to image
 base64 -i -d <<< $(cat $HTML_FILE |egrep -o "\/9j\/[^\"]*") > $IMAGE_FILE
+
+# view image
+feh $IMAGE_FILE &
 
 #Captcha challenge field  
 Cap_Challenge=$(cat img.html |grep value|head -n 1|cut -d\" -f 2)
 
+#show ip
+proxychains4 -q curl ipecho.net/plain
+
 #Enter code captcha
 while [[ -z $Cap_Response ]]; do 
-	read -p "Enter code : " Cap_Response
+	read -p " => Enter code (Enter 'r' For Reset Captcha): " Cap_Response
+    [[ $Cap_Response == "r" ]] && { 
+                                    ClearFiles "${HTML_FILE}" "${IMAGE_FILE}" "${BridgeFile}"
+                                    kill -9 $(jobs -p)  2>&1>/dev/null 
+                                    $0 
+                                    exit 0 
+                                  } 
 done
+
+kill -9 $(jobs -p) >/dev/null
 # get captcha
-proxychains -q curl -s "https://bridges.torproject.org/bridges?transport=obfs4" \
-					-H "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/30200101 Firefox/68.0" \
-					-H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" \
-					-H "Accept-Language: en-US,en;q=0.5" --compressed \
-					-H "Content-Type: application/x-www-form-urlencoded" \
-					-H "Connection: keep-alive" \
-					-H "Upgrade-Insecure-Requests: 1" \
-					-H "Pragma: no-cache" \
-					-H "Cache-Control: no-cache" \
-					--data "captcha_challenge_field=${Cap_Challenge}&captcha_response_field=${Cap_Response}&submit=submit" -o bridges
+proxychains4 -q curl -s "https://bridges.torproject.org/bridges?transport=obfs4" \
+                     --data "captcha_challenge_field=${Cap_Challenge}&captcha_response_field=${Cap_Response}&submit=submit" -o "$BridgeFile"
 
-cat bridges |grep obfs4 |cut -d ' ' -f 1,2,3,4,5|egrep -o "^[^<]*"|sed 's/^/Bridge /g'
+#check code is correct or incorrect
+RES=$(cat "$BridgeFile" |grep obfs4 |egrep -o "^[^<]*")
+[[ ! -z $(echo $RES|tr -d '\n') ]] && BRIDGES=$(echo "$RES" |sed 's/^/Bridge /g') || { echo -e "\e[33mThe code entered is incorrect" && exit 0 ;}
 
+#add Bridges Into torrc
+if [ -e "/etc/tor/torrc" ]; then
+    if [[ ! $(grep "UseBridges 1" /etc/tor/torrc) ]]; then
+        echo "UseBridges 1" >> /etc/tor/torrc
+    fi 
 
+    if [[ ! $(grep "ClientTransportPlugin obfs4 exec" /etc/tor/torrc) ]]; then
+        obfs4proxy=$(which obfs4proxy)
+        echo "ClientTransportPlugin obfs4 exec ${obfs4proxy}" >> /etc/tor/torrc
+    fi 
+    sudo echo -e "\n${BRIDGES}" >> /etc/tor/torrc
+    echo -e "\e[35mBridges Added into \e[35m/etc/tor/torrc : \n\e[36m${BRIDGES}\n "
+else
+    echo -e "\e[31m /etc/tor/torrc doesn't exist"
+    exit 0
+fi
 
-
-
-
-
+ClearFiles "${HTML_FILE}" "${IMAGE_FILE}" "${BridgeFile}"
 
 
 
