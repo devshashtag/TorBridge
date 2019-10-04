@@ -17,8 +17,9 @@ chmod +x ./TorBridge.sh
 sudo ./TorBridge.sh
 ```
 
-**read code from image(for example : 9autjyaz) and write in terminal**
-**you'r ip => enter code (enter `r` for reset captcha):`9autjyaz`**
+**read code from image (**for example =>` 9autjyaz`**) and write in terminal**
+
+**you'r ip => enter code (enter r for reset captcha):** `9autjyaz`
 
 ```bash
 Bridges Added into /etc/tor/torrc :
@@ -30,8 +31,8 @@ Bridge obfs4 104.175.38.225:34363 8014246EC27A8BBF1A...........
 
 ## Requirements
 
-*** tor, feh, proxychains4, obfs4proxy***
+**tor, feh, proxychains4, obfs4proxy**
 
 ## More
->  Special thanks to :  **virtualdemon**
+>  Special thanks to : **virtualdemon**
 
