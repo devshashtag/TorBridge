@@ -19,9 +19,9 @@ sudo ./TorBridge.sh
 
 **read code from image (**for example =>` 9autjyaz`**) and write in terminal**
 
-**you'r ip => enter code (enter r for reset captcha):** `9autjyaz`
-
 ```bash
+you'r ip => enter code (enter r for reset captcha) : 9autjyaz
+
 Bridges Added into /etc/tor/torrc :
 Bridge obfs4 87.239.87.142:43618 562C4B1FB0DAEFFDDDAD..............
 Bridge obfs4 217.12.199.62:44313 F7AD3CC4C00786BA4F.............
