@@ -52,7 +52,7 @@ proxychains4 -q curl ipecho.net/plain
 echo -ne "\e[1;34m"
 # Enter code captcha
 while [[ -z $Cap_Response ]]; do
-	read -p " => Enter code (Enter 'r' For Reset Captcha): " Cap_Response
+    read -p " => Enter code (Enter 'r' For Reset Captcha): " Cap_Response
 
     # kill feh job
     kill $FEH_PID
@@ -64,7 +64,7 @@ while [[ -z $Cap_Response ]]; do
                                   }
 done
 
-# get captcha
+# end captcha
 proxychains4 -q curl -s "https://bridges.torproject.org/bridges?transport=obfs4" \
                      --data "captcha_challenge_field=${Cap_Challenge}&captcha_response_field=${Cap_Response}&submit=submit" -o "$BridgeFile"
 
@@ -74,7 +74,7 @@ RES=$(cat "$BridgeFile" |grep obfs4 |egrep -o "^[^<]*")
 # delete tmp files
 ClearFiles "${HTML_FILE}" "${IMAGE_FILE}" "${BridgeFile}"
 
-# if code is correct bridges save into /etc/tor/torrc . incorrect show error
+# if Cap_Response is correct bridges save into /etc/tor/torrc . incorrect show error
 [[ ! -z $(echo $RES|tr -d '\n') ]] &&
     BRIDGES=$(echo "$RES" |sed 's/^/Bridge /g') ||
     {
