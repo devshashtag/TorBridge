@@ -94,10 +94,15 @@ if [ -e "/etc/tor/torrc" ]; then
     fi
     sudo echo -e "\n${BRIDGES}" >> /etc/tor/torrc
     echo -e "\e[35mBridges Added into \e[35m/etc/tor/torrc : \n\e[36m${BRIDGES}\n "
+    systemctl restart tor.service
+    echo -e "\e[1;35mwaiting for restart tor service .."
+    sleep 5
+    remove-broken-bridges
 else
     echo -e "\e[31m /etc/tor/torrc doesn't exist"
     exit 0
 fi
+
 
 
 

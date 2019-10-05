@@ -26,15 +26,15 @@ get bridges :
 sudo get-tor-bridges
 ```
 
-**read code from image (**for example =>` 9autjyaz`**) and write in terminal**
+**read code from image (**for example =>` AkP92qaM`**) and write in terminal**
 
 ```bash
-your ip => enter code (enter r for reset captcha) : 9autjyaz
+{Tor ip} => enter code (enter r for reset captcha) : AkP92qaM
 
 Bridges Added into /etc/tor/torrc :
-Bridge obfs4 87.239.87.142:43618 562C4B1FB0DAEFFDDDAD..............
-Bridge obfs4 217.12.199.62:44313 F7AD3CC4C00786BA4F.............
-Bridge obfs4 104.175.38.225:34363 8014246EC27A8BBF1A...........
+Bridge obfs4 217.112.131.53:443 1DF71F28E8A97C285A5F58857...........
+Bridge obfs4 70.69.20.165:53934 B4BA94C26FA87E647261D734B..........
+Bridge obfs4 172.105.81.183:443 E5350EF0B0F2B75D2C6DBDFD2..........
 ```
 
 ## Remove bad bridges
