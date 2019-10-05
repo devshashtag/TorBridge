@@ -20,7 +20,7 @@ mkdir -p ~/.local/bin && cd ~/.local/bin && curl -s -o get-tor-bridges https://r
 ```
 **Please check your $PATH var configuration! in most cases ~/.local/bin added in bash. if it's not imported please add this lines to your ~/.shellrc :**
 ```bash
-if [ -e "~/local/.bin" ]; then
+if [ -e "~/.local/bin" ]; then
     export PATH="$PATH:$HOME/.local/bin/"
 fi
 ```
