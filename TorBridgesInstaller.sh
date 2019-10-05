@@ -24,6 +24,4 @@ fi
     source $shell_file
 }
 
-echo -e "\e[32m Script installed successfully! "
-
-cd
+echo -e "\e[32mScript installed successfully! "
