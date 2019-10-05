@@ -12,6 +12,7 @@ curl -s -o remove-broken-bridges https://raw.githubusercontent.com/MicroRobotPro
 chmod +x remove-broken-bridges
 chmod +x get-tor-bridges
 
+# add path program to path variable
 [[ -z $(echo $PATH|grep $HOME/.local/bin) ]] &&
 {
     shell_file=$HOME/.$(egrep -o "[^/]*$" <<< $SHELL)rc
