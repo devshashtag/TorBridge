@@ -97,9 +97,6 @@ if [ -e "/etc/tor/torrc" ]; then
 
     echo -e "\e[1;33mwaiting for remove broken bridges .."
     remove-broken-bridges
-    systemctl restart tor.service
-    echo -e "\e[1;35mwaiting for restart tor service .."
-    sleep 5
 else
     echo -e "\e[31m /etc/tor/torrc doesn't exist"
     exit 0
