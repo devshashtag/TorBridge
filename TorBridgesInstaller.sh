@@ -21,7 +21,6 @@ if [ -e "~/.local/bin" ]; then
     export PATH="\$PATH:\$HOME/.local/bin/"
 fi
 """ >> $shell_file
-    source $shell_file
 }
 
 echo -e "\e[32mScript installed successfully! "

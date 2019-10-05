@@ -16,7 +16,7 @@ Install these packages with your package manager:
 ## Download
 with curl :
 ```bash
-mkdir -p /tmp/tor-installer && cd /tmp/tor-installer && curl -s -o tor-bridges-installer https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/TorBridgesInstaller.sh && chmod +x tor-bridges-installer && ./tor-bridges-installer && cd
+mkdir -p /tmp/tor-installer && cd /tmp/tor-installer && curl -s -o tor-bridges-installer https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/TorBridgesInstaller.sh && chmod +x tor-bridges-installer && ./tor-bridges-installer && shell_file=$HOME/.$(egrep -o "[^/]*$" <<< $SHELL)rc && source $shell_file && cd
 ```
 
 ## Run
