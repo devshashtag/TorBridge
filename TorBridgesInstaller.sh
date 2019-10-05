@@ -12,15 +12,16 @@ curl -s -o remove-broken-bridges https://raw.githubusercontent.com/MicroRobotPro
 chmod +x remove-broken-bridges
 chmod +x get-tor-bridges
 
-[[ -z $(echo $PATH|grep ~/.local/bin) ]] &&
+[[ -z $(echo $PATH|grep $HOME/.local/bin) ]] &&
 {
     shell_file=$HOME/.$(egrep -o "[^/]*$" <<< $SHELL)rc
     # add path run script into PATH variable
     cat <<< """
-        if [ -e "~/.local/bin" ]; then
-            export PATH="\$PATH:\$HOME/.local/bin/"
-        fi
-        """ >> $shell_file
+if [ -e "~/.local/bin" ]; then
+    export PATH="\$PATH:\$HOME/.local/bin/"
+fi
+""" >> $shell_file
+    source $shell_file
 }
 
 echo -e "\e[32m Script installed successfully! "
