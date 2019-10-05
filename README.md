@@ -4,7 +4,6 @@
 
 ![TBCLI preview](https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/screenshot/captcha.jpg)
 ![TBCLI preview](https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/screenshot/Bridges.jpg)
-![TBCLI preview](https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/screenshot/removeBrokenBridges.jpg)
 
 ## Requirements (before installation)
 **Script runs with tor for now! i'll add a proxy version later**
@@ -44,6 +43,8 @@ remove bad bridges from file /etc/tor/torrc :
 ```bash
 sudo remove-broken-bridges
 ```
+
+![TBCLI preview](https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/screenshot/removeBrokenBridges.jpg)
 
 ## More
 >  Special thanks to : **virtualdemon**
