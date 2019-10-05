@@ -17,7 +17,7 @@ function bad_bridges_remover(){
         # echo -e "\e[32m$(cat $tor_conf_file|egrep --color=auto "^Bridge.*")"
         # restart tor
         systemctl restart tor.service
-        echo -e "\e[1;35 waiting for restart tor service .."
+        echo -e "\e[1;35mwaiting for restart tor service .."
         sleep 5
         echo -e "\e[33mbroken bridges successfully removed.\e[m"
     } ||
