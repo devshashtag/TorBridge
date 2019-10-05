@@ -17,17 +17,12 @@ Install these packages with your package manager:
 ## Download
 with curl :
 ```bash
-mkdir -p ~/.local/bin && cd ~/.local/bin && curl -s -o get-tor-bridges https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/TorBridge.sh && chmod +x get-tor-bridges && echo "Script downloaded successfully! " && cd
-```
-**Please check your $PATH var configuration! in most cases ~/.local/bin added in bash. if it's not imported please add this lines to your ~/.shellrc :**
-```bash
-if [ -e "~/.local/bin" ]; then
-    export PATH="$PATH:$HOME/.local/bin/"
-fi
+mkdir -p /tmp/tor-installer && cd /tmp/tor-installer && curl -s https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/TorBridgesInstaller.sh && chmod +x TorBridgesInstaller.sh && ./TorBridgesInstaller.sh && echo "Script installed successfully!" && cd
 ```
 
 ## Run
 
+get bridges :
 ```bash
 sudo get-tor-bridges
 ```
@@ -41,6 +36,13 @@ Bridges Added into /etc/tor/torrc :
 Bridge obfs4 87.239.87.142:43618 562C4B1FB0DAEFFDDDAD..............
 Bridge obfs4 217.12.199.62:44313 F7AD3CC4C00786BA4F.............
 Bridge obfs4 104.175.38.225:34363 8014246EC27A8BBF1A...........
+```
+
+## Remove bad bridges
+
+remove bad bridges from file /etc/tor/torrc :
+```bash
+sudo remove-broken-bridges
 ```
 
 ## More
