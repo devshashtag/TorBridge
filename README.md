@@ -5,7 +5,7 @@
 ![TBCLI preview](https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/screenshot/captcha.jpg)
 ![TBCLI preview](https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/screenshot/Bridges.jpg)
 
-## Requirements (befor installation)
+## Requirements (before installation)
 **Script runs with tor for now! i'll add a proxy version later**
 Install these packages with your package manager:
 1. tor
