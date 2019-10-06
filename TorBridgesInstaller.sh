@@ -5,9 +5,9 @@
 mkdir -p ~/.local/bin
 cd ~/.local/bin
 
+# download files
 curl -s -o get-tor-bridges https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/TorBridges.sh
-
-curl -s -o remove-broken-bridges https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/remove_broken_bridges.sh
+curl -s -o remove-broken-bridges https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/RemoveBrokenBridges.sh
 
 chmod +x remove-broken-bridges
 chmod +x get-tor-bridges
