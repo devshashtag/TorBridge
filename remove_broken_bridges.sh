@@ -28,7 +28,7 @@ function remove_broken_bridges(){
 
 # this script need to run as root
 if [[ $UID -ne 0 ]]; then
-    echo -e "\e[31mThis script must be run as root\e[m "
+    echo -e "\e[31mThis script must be run as root !\e[m "
     exit 1
 fi
 
