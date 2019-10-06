@@ -4,14 +4,14 @@
 
 tor_conf_file=/etc/tor/torrc
 
-function bad_bridges_remover(){
+function remove_broken_bridges(){
     bad_bridges=$(systemctl status tor.service|grep "unable"|egrep -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}")
     [[ ! -z $(echo $bad_bridges|tr -d '\n') ]] &&
     {
         echo -e "\e[31mBad Bridges:"
         echo -e "\e[36m$bad_bridges" |sed 's/^/\t/g'
         for i in ${bad_bridges[@]};do
-            sed -i "/${i}/ d" $tor_conf_file
+            sed -i "s/Bridge.*${i}/#&/g" $tor_conf_file
         done
         # good bridges
         # echo -e "\e[32m$(cat $tor_conf_file|egrep --color=auto "^Bridge.*")"
@@ -32,4 +32,4 @@ if [[ $UID -ne 0 ]]; then
     exit 1
 fi
 
-bad_bridges_remover
+remove_broken_bridges

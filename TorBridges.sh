@@ -11,7 +11,7 @@ if [[ ! $(which feh) || ! $(which tor) || ! $(which proxychains4) || ! $(which o
     exit 1
 fi
 
-if [[ $UID -ne 0 ]]; then
+if [[ $UID -ne 0 ]]; then   
     echo -e "\e[31mThis script must be run as root\e[m "
     exit 1
 fi
