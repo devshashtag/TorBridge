@@ -15,7 +15,7 @@ fi
 function usage(){
     echo -e "\e[0;1;33mPart of Tor Bridges -> Bridge Manager"
     echo -e "\e[35mUSAGE :"
-    echo -e "\e[0;32m\t-c | --disable-check-bridges\t\e[0;36mdont try to find broken bridges"
+    echo -e "\e[0;32m\t-c | --disable-test-bridges\t\e[0;36mdont try to find broken bridges"
     echo -e "\e[0;32m\t-r | --reset-tor\t\e[0;36mrestart tor service"
     echo -e "\e[0;32m\t-h | --help\t\t\e[0;36mshow this help"
     echo -e "\e[m"
@@ -40,11 +40,13 @@ function remove_broken_bridges(){
     } ||
         echo -e "\e[1;35mAll bridges are healthy\e[m"
 }
+
 check="True"
 # args
+
 while [ "$1" != "" ]; do
     case $1 in
-        -c | --disable-check-bridges ) check="False" ;;
+        -c | --disable-test-bridges ) check="False" ;;
 
         -r | --reset-tor    )
         {
