@@ -15,7 +15,7 @@ fi
 function usage(){
     echo -e "\e[0;1;33mPart of Tor Bridges -> Bridge Manager"
     echo -e "\e[35mUSAGE :"
-    echo -e "\e[0;32m\t-c | --disable-test-bridges\t\e[0;36mdont try to find broken bridges"
+    echo -e "\e[0;32m\t-t | --test-bridges\t\e[0;36m\tremove broken bridges"
     echo -e "\e[0;32m\t-r | --reset-tor\t\t\e[0;36mrestart tor service"
     echo -e "\e[0;32m\t-h | --help\t\t\t\e[0;36mshow this help"
     echo -e "\e[m"
@@ -24,14 +24,14 @@ function usage(){
 # read unable connetion bridges from status tor and comment bad bridges
 function remove_broken_bridges(){
 
-    echo -ne "\e[1;33mwaiting for find broken bridges:\n\t"
-    bad_bridges=$(systemctl status tor.service|grep "unable"|egrep -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}")
-    [[ ! -z $(echo $bad_bridges|tr -d '\n') ]] &&
+    echo -ne "\e[0;33mwaiting for find broken bridges:\n\t"
+    broken_bridges=$(systemctl status tor.service|grep "unable"|egrep -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}")
+    [[ ! -z $(echo $broken_bridges|tr -d '\n') ]] &&
     {
-        echo -e "\e[31mBad Bridges:"
-        echo -e "\e[36m$bad_bridges" |sed 's/^/\t/g'
-        for i in ${bad_bridges[@]};do
-            sed -i "s/Bridge.*${i}/#&/g" $TorConfigFile
+        echo -e "\e[1;31mBroken Bridges:"
+        for bridge in ${broken_bridges[@]};do
+            echo -e "\t\e[1;35m[\e[31mX\e[35m] \e[0;36m$bridge"
+            sed -i "s/^Bridge.*${bridge}/#&/g" $TorConfigFile
         done
         # good bridges
         # echo -e "\e[32m$(cat $TorConfigFile|egrep --color=auto "^Bridge.*")"
@@ -41,21 +41,23 @@ function remove_broken_bridges(){
         echo -e "\e[1;35mAll bridges are healthy\e[m"
 }
 
-check="True"
 # args
+if [[ $# -lt 1 ]];then
+    remove_broken_bridges
+fi
 
 while [ "$1" != "" ]; do
     case $1 in
-        -c | --disable-test-bridges ) check="False" ;;
+        -t | --test-bridges ) remove_broken_bridges ;;
 
         -r | --reset-tor    )
         {
             # restart tor
             systemctl restart tor.service
             echo -e "\e[1;35mwaiting for restart tor service .."
-
+            res=0
             status=" "
-            while [[ "$res" != "100" ]];do
+            while [[ "$res" -lt "100" ]];do
                 sleep 0.1
                 res=$(systemctl status tor.service |egrep -o "Bootstrapped[^%]*"|tail -n 1|cut -d' ' -f2)
                 [[ -z $(grep "$res" <<< "$status") ]] && status="$res$status" && echo -ne "|$res"
@@ -68,6 +70,3 @@ while [ "$1" != "" ]; do
     shift
 done
 
-if [[ $check == "True" ]];then
-    remove_broken_bridges
-fi

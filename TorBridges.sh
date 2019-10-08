@@ -152,7 +152,7 @@ function get_tor_bridges(){
         fi
 
         if [[ "$ReTor" == "True" ]]; then
-            remove-broken-bridges -c -r
+            remove-broken-bridges -r
         fi
 
     else

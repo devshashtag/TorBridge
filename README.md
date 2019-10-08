@@ -60,7 +60,7 @@ sudo remove-broken-bridges
 ```
 ```bash
     remove-broken-bridges:
-                -c | --disable-test-bridges  dont try to find broken bridges
+                -t | --test-bridges          remove broken bridges
                 -r | --reset-tor             restart tor service
                 -h | --help                  show this help
 ```
