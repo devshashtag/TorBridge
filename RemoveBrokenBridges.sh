@@ -16,8 +16,8 @@ function usage(){
     echo -e "\e[0;1;33mPart of Tor Bridges -> Bridge Manager"
     echo -e "\e[35mUSAGE :"
     echo -e "\e[0;32m\t-c | --disable-test-bridges\t\e[0;36mdont try to find broken bridges"
-    echo -e "\e[0;32m\t-r | --reset-tor\t\e[0;36mrestart tor service"
-    echo -e "\e[0;32m\t-h | --help\t\t\e[0;36mshow this help"
+    echo -e "\e[0;32m\t-r | --reset-tor\t\t\e[0;36mrestart tor service"
+    echo -e "\e[0;32m\t-h | --help\t\t\t\e[0;36mshow this help"
     echo -e "\e[m"
 }
 

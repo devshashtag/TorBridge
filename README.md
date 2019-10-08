@@ -50,5 +50,19 @@ sudo remove-broken-bridges
 
 ![TBCLI preview](https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/screenshot/removeBrokenBridges.jpg)
 
+# USAGE
+```bash
+    get-tor-bridges :
+                -a | --add-bridges           add bridges to /etc/tor/torrc
+                -t | --test-bridges          test bridges and comment broken bridges
+                -r | --reset-tor             restart tor service
+                -h | --help                  show this help
+```
+```bash
+    remove-broken-bridges:
+                -c | --disable-test-bridges  dont try to find broken bridges
+                -r | --reset-tor             restart tor service
+                -h | --help                  show this help
+```
 ## More
 >  Special thanks to : **virtualdemon**
