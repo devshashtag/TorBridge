@@ -31,10 +31,10 @@ function remove_broken_bridges(){
         echo -e "\e[31mBad Bridges:"
         echo -e "\e[36m$bad_bridges" |sed 's/^/\t/g'
         for i in ${bad_bridges[@]};do
-            sed -i "s/Bridge.*${i}/#&/g" $tor_conf_file
+            sed -i "s/Bridge.*${i}/#&/g" $TorConfigFile
         done
         # good bridges
-        # echo -e "\e[32m$(cat $tor_conf_file|egrep --color=auto "^Bridge.*")"
+        # echo -e "\e[32m$(cat $TorConfigFile|egrep --color=auto "^Bridge.*")"
 
         echo -e "\e[33mbroken bridges successfully removed.\e[m"
     } ||
