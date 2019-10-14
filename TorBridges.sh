@@ -157,7 +157,7 @@ function UninstallTBCLI(){
     read -p "Do you want to delete this Script (y/n): " req
     if [[ "$req" == [yY]* ]]; then 
 
-        echo -e "\e[1;32mWait for uninstalling...\e[1;33m"
+        echo -e "\e[1;32mWait for uninstall\e[31m...\e[1;33m"
         # app name
         nameprogram="get-tor-bridges"
         apps="$nameprogram remove-broken-bridges"
