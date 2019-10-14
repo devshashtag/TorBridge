@@ -5,9 +5,6 @@
 **new version** :
 [![asciicast](https://asciinema.org/a/CVdg9arcaLU9nyXsvuW7FOyEn.svg)](https://asciinema.org/a/CVdg9arcaLU9nyXsvuW7FOyEn)
 
-**old version** :
-
-![TBCLI preview](https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/screenshot/Bridges.png)
 
 ## Requirements (before installation)
 **Script runs with tor for now! i'll add a proxy version later**
