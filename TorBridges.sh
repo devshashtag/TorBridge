@@ -15,11 +15,6 @@ if [[ ! $(which feh) || ! $(which tor) || ! $(which proxychains4) || ! $(which o
     exit 1
 fi
 
-# This script need to run as root
-if [[ $UID -ne 0 ]]; then
-    echo -e "\e[31mThis script must be run as root!\e[m "
-    exit 1
-fi
 
 # usage
 function usage(){
@@ -28,13 +23,14 @@ function usage(){
     echo -e "\e[0;32m\t-a | --add-bridges\t\e[0;36madd bridges to /etc/tor/torrc"
     echo -e "\e[0;32m\t-t | --test-bridges\t\e[0;36mtest bridges and comment broken bridges"
     echo -e "\e[0;32m\t-r | --reset-tor\t\e[0;36mrestart tor service"
+    echo -e "\e[0;32m\t-u | --uninstall\t\e[0;36muninstall Script"
     echo -e "\e[0;32m\t-h | --help\t\t\e[0;36mshow this help"
     echo -e "\e[m"
 }
 
 # delete files
 function ClearFiles() {
-    for file in $@; do
+    for file in "${HTML_FILE}" "${IMAGE_FILE}" "${BridgeFile}"; do
         if [[ -e "$file" ]]; then
             rm $file
         fi
@@ -44,18 +40,18 @@ function ClearFiles() {
 # get tor bridges
 function get_tor_bridges(){
 
-    # add bridges into file $TorConfigFile (default=True)
+    # add bridges into file $TorConfigFile (default=False)
     AddBridges="$1"
 
-    # remove broken bridges (default=True)
+    # remove broken bridges (default=False)
     RemoveBrokenBridges="$2"
 
-    # restart Tor Service (default=True)
+    # restart Tor Service (default=False)
     ReTor="$3"
 
 
     # delete tmp files
-    ClearFiles "${HTML_FILE}" "${IMAGE_FILE}" "${BridgeFile}"
+    ClearFiles 
 
     # get Captcha
     proxychains4 -q curl -s "$LinkGetTorBridge" -o $HTML_FILE
@@ -90,9 +86,6 @@ function get_tor_bridges(){
             # kill feh job
             kill $FEH_PID
 
-            # delete tmp files
-            ClearFiles "${HTML_FILE}" "${IMAGE_FILE}" "${BridgeFile}"
-
             # clear data in Cap_Response for while condition true
             Cap_Response=""
 
@@ -121,9 +114,6 @@ function get_tor_bridges(){
 
     # kill feh job
     kill $FEH_PID
-
-    # delete tmp files
-    ClearFiles "${HTML_FILE}" "${IMAGE_FILE}" "${BridgeFile}"
 
     # add Bridges Into torrc
     if [ -e "$TorConfigFile" ]; then
@@ -161,6 +151,31 @@ function get_tor_bridges(){
     fi
 }
 
+# uninstall script
+function UninstallTBCLI(){
+    echo -ne "\e[1;34m"
+    read -p "Do you want to delete this Script (y/n): " req
+    if [[ "$req" == [yY]* ]]; then 
+
+        echo -e "\e[1;32mWait for uninstalling...\e[1;33m"
+        # app name
+        nameprogram="get-tor-bridges"
+        apps="$nameprogram remove-broken-bridges"
+        #~~~ remove TBCLI
+        path=$(which $nameprogram 2>/dev/null|sed 's/[^\/]*$//g')
+
+        if [[ ! -z "$(ls $path|tr -d '\n ')" && ! -z "$path" ]] ;then 
+            cd $path
+            rm $nameprogram
+            #~~~ end remove 
+            echo -e "\e[1;35mThanks for using this script."
+        else
+            echo -e "\e[1;31mcan't remove script . please install script"
+        fi
+
+    fi
+    echo -e "\e[m"
+}
 # # reset terminal
 # tput reset
 
@@ -176,11 +191,22 @@ while [ "$1" != "" ]; do
         -t | --test-bridges ) RemoveBrokenBridges="True" ;;
 
         -r | --reset-tor    ) ReTor="True";;
+        
+        -u | --uninstall    ) UninstallTBCLI && exit 0 ;;
 
         -h | --help | *) usage && exit 0;;
     esac
     shift
 done
+
+# This script need to run as root
+if [[ $UID -ne 0 ]]; then
+    echo -e "\e[31mThis script must be run as root!\e[m "
+    exit 1
+fi
+
+# delete tmp files
+trap ClearFiles EXIT
 
 # get tor bridges
 get_tor_bridges "$AddBridges" "$RemoveBrokenBridges" "$ReTor"

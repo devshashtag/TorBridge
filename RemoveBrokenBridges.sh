@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# how to work :
 # read status tor service and remove broken bridges
 
 TorConfigFile="/etc/tor/torrc"
@@ -21,21 +22,23 @@ function usage(){
     echo -e "\e[m"
 }
 
-# read unable connetion bridges from status tor and comment bad bridges
+# read 'unable connetion bridges' from status tor and comment broken bridges
 function remove_broken_bridges(){
 
     echo -ne "\e[0;33mwaiting for find broken bridges:\n\t"
+    # broken bridges
     broken_bridges=$(systemctl status tor.service|grep "unable"|egrep -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}")
+    # check bridges exist
     [[ ! -z $(echo $broken_bridges|tr -d '\n') ]] &&
     {
         echo -e "\e[1;31mBroken Bridges:"
+        # comment broken bridges 
         for bridge in ${broken_bridges[@]};do
             echo -e "\t\e[1;35m[\e[31mX\e[35m] \e[0;36m$bridge"
             sed -i "s/^Bridge.*${bridge}/#&/g" $TorConfigFile
         done
         # good bridges
         # echo -e "\e[32m$(cat $TorConfigFile|egrep --color=auto "^Bridge.*")"
-
         echo -e "\e[33mbroken bridges successfully removed.\e[m"
     } ||
         echo -e "\e[1;35mAll bridges are healthy\e[m"
@@ -54,7 +57,8 @@ while [ "$1" != "" ]; do
         {
             # restart tor
             systemctl restart tor.service
-            echo -e "\e[1;35mwaiting for restart tor service .."
+            echo -e "\e[1;35mwait for restart tor service .."
+            # funny tor status load
             res=0
             status=" "
             while [[ "$res" -lt "100" ]];do
@@ -62,7 +66,7 @@ while [ "$1" != "" ]; do
                 res=$(systemctl status tor.service |egrep -o "Bootstrapped[^%]*"|tail -n 1|cut -d' ' -f2)
                 [[ -z $(grep "$res" <<< "$status") ]] && status="$res$status" && echo -ne "|$res"
             done
-            echo "|"
+            echo ":"
         };;
 
         -h | --help | *) usage && exit 0;;
