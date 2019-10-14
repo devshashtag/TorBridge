@@ -3,11 +3,10 @@
 **a simple script for get tor bridge from** :` https://bridges.torproject.org/bridges`
 
 **new version** :
-[![asciicast](https://asciinema.org/a/mSq9zbAhq2FMSp1pQ4sXHXJB6.png)](https://asciinema.org/a/mSq9zbAhq2FMSp1pQ4sXHXJB6)
+![asciicast](https://asciinema.org/a/CVdg9arcaLU9nyXsvuW7FOyEn.svg)](https://asciinema.org/a/CVdg9arcaLU9nyXsvuW7FOyEn)
 
 **old version** :
-![TBCLI preview](https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/screenshot/captcha.jpg)
-![TBCLI preview](https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/screenshot/Bridges.jpg)
+![TBCLI preview](https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/screenshot/Bridges.png)
 
 ## Requirements (before installation)
 **Script runs with tor for now! i'll add a proxy version later**
