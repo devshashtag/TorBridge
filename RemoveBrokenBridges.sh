@@ -42,6 +42,7 @@ function remove_broken_bridges(){
         echo -e "\e[33mbroken bridges successfully removed.\e[m"
     } ||
         echo -e "\e[1;35mAll bridges are healthy\e[m"
+    echo -e "\t\e[1;36mActive Bridges : $(cat /etc/tor/torrc |grep ^Bridge|wc -l)\e[m"
 }
 
 # args
@@ -66,7 +67,7 @@ while [ "$1" != "" ]; do
                 res=$(systemctl status tor.service |egrep -o "Bootstrapped[^%]*"|tail -n 1|cut -d' ' -f2)
                 [[ -z $(grep "$res" <<< "$status") ]] && status="$res$status" && echo -ne "|$res"
             done
-            echo ":"
+            echo "|"
         };;
 
         -h | --help | *) usage && exit 0;;
