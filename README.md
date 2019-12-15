@@ -30,17 +30,21 @@ get-tor-bridges -u
 **this script need to run as root**(*for add bridges and restart tor service*)
 ```bash
     get-tor-bridges :
-                -a | --add-bridges           add bridges to /etc/tor/torrc
-                -t | --test-bridges          test bridges and comment broken bridges
-                -r | --reset-tor             restart tor service
-                -u | --uninstall             uninstall Script
-                -h | --help                  show this help
+                -a | --add-bridges            add bridges to /etc/tor/torrc
+                -d | --disable-broken-bridge  Disable broken Bridges in this network connection
+                -e | --enable-all-bridge      Enable all disabled Bridges
+                -r | --reset-tor              restart tor service
+                -u | --uninstall              uninstall Script
+                -h | --help                   show this help
+
 ```
 ```bash
     remove-broken-bridges:
-                -t | --test-bridges          remove broken bridges
+                -d | --disable-broken-bridge Disable broken Bridges in this network connection
+                -e | --enable-all-bridge     Enable all disabled Bridges
                 -r | --reset-tor             restart tor service
                 -h | --help                  show this help
+
 ```
 
 ## More

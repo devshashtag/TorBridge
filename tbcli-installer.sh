@@ -12,15 +12,15 @@ curl -s -o bridges-manager "${repo}bridges-manager.sh"
 curl -s -o tbcli-config    "${repo}tbcli-config"
 
 # check files
-if [[ ! -e get-tor-bridges && ! -e bridges-manager && ! -e config ]]; then
+if [[ ! -e get-tor-bridges && ! -e bridges-manager && ! -e tbcli-config ]]; then
     echo -e "\e[1;31mfiles are not available . Please Check the Permission or Connection.\e[m"
     exit 1
 fi
 
 # execute permission
-chmod +x remove-broken-bridges
+chmod +x bridges-manager
 chmod +x get-tor-bridges
-chmod +x config 
+chmod +x tbcli-config 
 
 # shell file config
 shell_file=$HOME/.$(egrep -o "[^/]*$" <<< $SHELL)rc

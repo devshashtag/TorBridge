@@ -20,7 +20,7 @@ function usage(){
     echo -e "${light_magenta}USAGE ${light_yellow}Bridge Manager ${light_red}:"
     echo -e "${light_green}\t-d | --disable-broken-bridge\t${cyan}Disable broken Bridges in this network connection"
     echo -e "${light_green}\t-e | --enable-all-bridge\t${cyan}Enable all disabled Bridges"
-    echo -e "${light_green}\t-r | --reset-tor\t\t${cyan}mrestart tor service"
+    echo -e "${light_green}\t-r | --reset-tor\t\t${cyan}restart tor service"
     echo -e "${light_green}\t-h | --help\t\t\t${cyan}show this help"
     echo -e "${nc}"
 }
