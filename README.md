@@ -39,7 +39,7 @@ get-tor-bridges -u
 
 ```
 ```bash
-    remove-broken-bridges:
+    bridges-manager :
                 -d | --disable-broken-bridge Disable broken Bridges in this network connection
                 -e | --enable-all-bridge     Enable all disabled Bridges
                 -r | --reset-tor             restart tor service
