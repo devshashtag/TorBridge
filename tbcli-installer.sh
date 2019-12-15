@@ -7,9 +7,9 @@ cd ~/.local/bin
 repo="https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/"
 
 # download files
-curl -s -o get-tor-bridges "${repo}TorBridges.sh"
-curl -s -o bridges-manager "${repo}RemoveBrokenBridges.sh"
-curl -s -o config          "${repo}tbcli-config"
+curl -s -o get-tor-bridges "${repo}get-tor-bridges.sh"
+curl -s -o bridges-manager "${repo}bridges-manager.sh"
+curl -s -o tbcli-config    "${repo}tbcli-config"
 
 # check files
 if [[ ! -e get-tor-bridges && ! -e bridges-manager && ! -e config ]]; then
