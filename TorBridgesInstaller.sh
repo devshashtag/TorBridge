@@ -4,12 +4,15 @@
 mkdir -p ~/.local/bin
 cd ~/.local/bin
 
+repo="https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/"
+
 # download files
-curl -s -o get-tor-bridges https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/TorBridges.sh
-curl -s -o remove-broken-bridges https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/RemoveBrokenBridges.sh
+curl -s -o get-tor-bridges "${repo}TorBridges.sh"
+curl -s -o bridges-manager "${repo}RemoveBrokenBridges.sh"
+curl -s -o config          "${repo}tbcli-config"
 
 # check files
-if [[ ! -e get-tor-bridges && ! -e remove-broken-bridges ]]; then
+if [[ ! -e get-tor-bridges && ! -e bridges-manager && ! -e config ]]; then
     echo -e "\e[1;31mfiles are not available . Please Check the Permission or Connection.\e[m"
     exit 1
 fi
@@ -17,7 +20,7 @@ fi
 # execute permission
 chmod +x remove-broken-bridges
 chmod +x get-tor-bridges
-
+chmod +x config 
 
 # shell file config
 shell_file=$HOME/.$(egrep -o "[^/]*$" <<< $SHELL)rc
