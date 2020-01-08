@@ -1,6 +1,4 @@
-# ABOUT
-
-** Tor Bridge cli **
+# Tor Bridge cli
 
 **a simple script for get tor bridge from** : `https://bridges.torproject.org/bridges`
 
@@ -25,7 +23,7 @@ mkdir -p /tmp/tor-installer && cd /tmp/tor-installer && curl -s -o tbcli-install
 ## uninstall 
 
 ```bash
-get-tor-bridges -u 
+tbcli -u 
 ```
 
 ## USAGE
@@ -41,4 +39,4 @@ get-tor-bridges -u
 ```
 
 ## More
->>>  Special thanks to : **virtualdemon**
+>  Special thanks to : **virtualdemon**
