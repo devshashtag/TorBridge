@@ -2,7 +2,7 @@
 
 **a simple script for get tor bridge from** : `https://bridges.torproject.org/bridges`
 
-**new version** :
+**old version** :
 [![asciicast](https://asciinema.org/a/CVdg9arcaLU9nyXsvuW7FOyEn.svg)](https://asciinema.org/a/CVdg9arcaLU9nyXsvuW7FOyEn)
 
 
