@@ -199,25 +199,22 @@ function UninstallTBCLI(){
     echo -ne "${light_blue}"
     read -p "Do you want to delete this Script (y/n): " req
     if [[ "$req" == [yY]* ]]; then 
-
-        echo -e "${light_green}Wait for uninstall${red}...${light_yellow}"
-        #~~~ remove TBCLI
-        file_projects="get-tor-bridges bridges-manager tbcli-config"
-        path=$(which "get-tor-bridges" |sed 's/[^\/]*$//g')
-
+        echo -e "${light_green}Wait for uninstall ${red}...${light_yellow}"
+        # remove TBCLI
+        path=$(which "${PROGRAM_NAME}" |sed 's/[^\/]*$//g')
         # check path not empty
         if [[ ! -z "$(ls $path|tr -d '\n ')" && ! -z "$path" ]] ;then 
             cd $path
-            echo -e "$path $file_projects"
-            rm $file_projects
+            echo -e "${light_yellow}path     : ${light_magenta}${path}"
+            echo -e "${light_yellow}programs : ${light_magenta}$( echo $PRJ_FILES |tr ' ' ',' )${nc}"
+            rm $PRJ_FILES
             #~~~ end remove 
-            echo -e "${light_magenta}Thanks for using this script."
+            echo -e "${light_magenta}Thank you for using."
         else
             echo -e "${light_red}can't remove script."
         fi
-
     fi
-    echo -e "${nc}"
+    echo -ne "${nc}"
 }
 
 

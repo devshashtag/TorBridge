@@ -6,6 +6,10 @@ tor_config_file="/etc/tor/torrc"
 # url get bridge
 url_bridges="https://bridges.torproject.org/bridges?transport=obfs4"
 
+# define variable ( dont change )
+PROGRAM_NAME="get-tor-bridges"
+PRJ_FILES="${PROGRAM_NAME} tbcli-config" 
+
 # temp files 
 HTML_FILE="img.html"
 IMAGE_CAPTCHA_FILE="captcha.jpg"
