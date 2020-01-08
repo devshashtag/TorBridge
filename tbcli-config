@@ -6,9 +6,13 @@ tor_config_file="/etc/tor/torrc"
 # url get bridge
 url_bridges="https://bridges.torproject.org/bridges?transport=obfs4"
 
-# for manage uninstall 
-file_projects="get-tor-bridges bridges-manager tbcli-config"
-path=$(which "get-tor-bridges" |sed 's/[^\/]*$//g')
+# temp files 
+HTML_FILE="img.html"
+IMAGE_CAPTCHA_FILE="captcha.jpg"
+BridgeFile="bridges.txt"
+
+# my ip 
+IpSite="icanhazip.com"
 
 # colors 
 nc="\e[0m"
@@ -28,3 +32,6 @@ light_blue="\e[94m"
 light_magenta="\e[95m"
 light_cyan="\e[96m"
 white="\e[97m"
+
+# tor reset separator
+reset_sep="${light_red} >${light_blue}%"

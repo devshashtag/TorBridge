@@ -1,6 +1,6 @@
 # ABOUT
 
-**a simple script for get tor bridge from** :` https://bridges.torproject.org/bridges`
+**a simple script for get tor bridge from** : `https://bridges.torproject.org/bridges`
 
 **new version** :
 [![asciicast](https://asciinema.org/a/CVdg9arcaLU9nyXsvuW7FOyEn.svg)](https://asciinema.org/a/CVdg9arcaLU9nyXsvuW7FOyEn)
@@ -27,25 +27,16 @@ get-tor-bridges -u
 ```
 
 ## USAGE
-**this script need to run as root**(*for add bridges and restart tor service*)
+** this script need to run as root **(*for get/add/remove/disable/enable bridges and restart tor service*)
 ```bash
-    get-tor-bridges :
-                -a | --add-bridges            add bridges to /etc/tor/torrc
-                -d | --disable-broken-bridge  Disable broken Bridges in this network connection
-                -e | --enable-all-bridge      Enable all disabled Bridges
-                -r | --reset-tor              restart tor service
-                -u | --uninstall              uninstall Script
-                -h | --help                   show this help
-
-```
-```bash
-    bridges-manager :
-                -d | --disable-broken-bridge Disable broken Bridges in this network connection
-                -e | --enable-all-bridge     Enable all disabled Bridges
-                -r | --reset-tor             restart tor service
-                -h | --help                  show this help
-
+	-a | -A | --add-bridges             add bridges into /etc/tor/torrc and print bridges
+	-p | -P | --print-only-bridges      just print bridges
+	-d | -D | --disable-broken-bridges  Disable broken Bridges in this network connection
+	-e | -E | --enable-all-bridges      Enable all disabled Bridges
+	-r | -R | --reset-tor               restart tor service
+	-u | -U | --uninstall               uninstall Script
+	-h | -H | --help                    show this help
 ```
 
 ## More
->  Special thanks to : **virtualdemon**
+>>>  Special thanks to : **virtualdemon**
