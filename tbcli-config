@@ -7,7 +7,7 @@ tor_config_file="/etc/tor/torrc"
 url_bridges="https://bridges.torproject.org/bridges?transport=obfs4"
 
 # define variable ( dont change )
-PROGRAM_NAME="get-tor-bridges"
+PROGRAM_NAME="tbcli"
 PRJ_FILES="${PROGRAM_NAME} tbcli-config" 
 
 # temp files 
