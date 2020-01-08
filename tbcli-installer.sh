@@ -46,3 +46,4 @@ else
 fi
 
 echo -e "\e[1;32mScript installed successfully!\e[m"
+echo -e "\e[1;32mPlease Check 'tbcli -h' command\e[m"
