@@ -3,8 +3,8 @@
 **a simple script for get tor bridge from** : `https://bridges.torproject.org/bridges`
 **and manage tor service**
 
-**old version** :
-[![asciicast](https://asciinema.org/a/CVdg9arcaLU9nyXsvuW7FOyEn.svg)](https://asciinema.org/a/CVdg9arcaLU9nyXsvuW7FOyEn)
+**new version** :
+[![asciicast](https://asciinema.org/a/292599.svg)](https://asciinema.org/a/292599)
 
 
 ## Requirements (before installation)
