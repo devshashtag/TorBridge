@@ -30,23 +30,27 @@ shell_file=$HOME/.$(egrep -o "[^/]*$" <<< $SHELL)rc
 # Automatically add path program to shell config file jsut support bash and zshrc
 if [[ ! -z $(egrep "bash|zsh" <<< $shell_file) ]]; then
     # add path run script into PATH variable
-    if [[ -z $(cat $shell_file|egrep "if \[ -e ~/.local/bin \]; then") ]]; then
-        echo "if [ -e ~/.local/bin ]; then" >> $shell_file
-        echo "    export PATH=\"\$PATH:\$HOME/.local/bin/\"">> $shell_file
-        echo "fi" >> $shell_file
+    if [[ -z $(cat "$shell_file"|egrep "if \[ -e ~/.local/bin \]; then") ]]; then
+        echo "if [ -e ~/.local/bin ]; then" >> "$shell_file"
+        echo "    export PATH=\"\$PATH:\$HOME/.local/bin/\"">> "$shell_file"
+        echo "fi" >> "$shell_file"
         echo -e "\e[1;32mrun path was added automatically.\e[m"
     else
         echo -e "\e[1;32mpath already added.\e[m"
     fi
+    source "$shell_file"
+    echo -e "\e[1;32mScript installed successfully!\e[m"
+    echo -e "\e[1;32mPlease Check 'tbcli -h' command\e[m"
+    echo -e "\e[1;33mdo u want change tbcli config ? please check \e[1;34m~/.config/tbcli-config.\e[m"
 else
     # manual installation
     echo -e "\e[1;33mPlease add these lines to your '${SHELL}' config file and continue with manual installation\e[1;35m"
     echo -e "if [ -e ~/.local/bin ]; then"
     echo -e "    export PATH=\"\$PATH:\$HOME/.local/bin/\""
     echo -e "fi"
+    echo -e "\e[1;32mScript installed successfully!\e[m"
+    echo -e "\e[1;32mPlease Check 'tbcli -h' command after add path in to shell file\e[m"
+    echo -e "\e[1;33mdo u want change tbcli config ? please check \e[1;34m~/.config/tbcli-config.\e[m"
 fi
 
-echo -e "\e[1;32mScript installed successfully!\e[m"
-echo -e "\e[1;32mPlease Check 'tbcli -h' command\e[m"
-echo -e "\e[1;33mdo u want change tbcli config ? please check \e[1;34m~/.config/tbcli-config.\e[m"
 

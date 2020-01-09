@@ -17,7 +17,7 @@ Install these packages with your package manager:
 ## install
 **with curl** :
 ```bash
-mkdir -p /tmp/tor-installer && cd /tmp/tor-installer && curl -s -o tbcli-installer https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/tbcli-installer.sh && chmod +x tbcli-installer && ./tbcli-installer && shell_file=$HOME/.$(egrep -o "[^/]*$" <<< $SHELL)rc && source $shell_file && cd
+curl -s "https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/tbcli-installer.sh" |sh
 ```
 
 ## uninstall 
