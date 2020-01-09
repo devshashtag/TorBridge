@@ -80,7 +80,7 @@ function get_tor_bridges(){
             # reset captcha
             get_tor_bridges
 
-            exit 0
+            return
         fi
 
         # slove captcha and get Bridges
@@ -283,9 +283,7 @@ trap ClearTmpFiles EXIT
 if [[ ! -z $print_bridges || ! -z $add_bridges ]] ; then 
     BRIDGES=""
     get_tor_bridges
-    if [[ ! -z $add_bridges ]]; then 
-        reset_tor
-    fi
+    bridges_manager="$bridges_manager -r"
     echo -e "${light_red}---------------------------------------------------" # separator 
 fi
 
