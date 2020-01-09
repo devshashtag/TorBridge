@@ -18,7 +18,7 @@ Install these packages with your package manager:
 ## install
 **with curl** :
 ```bash
-curl -s "https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/tbcli-installer.sh" |sh
+curl -s "https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/tbcli-installer.sh" |bash
 ```
 
 ## uninstall 
