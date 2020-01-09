@@ -27,15 +27,17 @@ tbcli -u
 ```
 
 ## USAGE
-** this script need to run as root **(*for get/add/remove/disable/enable bridges and restart tor service*)
+**this script need to run as root** (*for get/add/remove/disable/enable bridges and restart tor service*)
 ```bash
-	-a | -A | --add-bridges             add bridges into /etc/tor/torrc and print bridges
-	-p | -P | --print-only-bridges      just print bridges
-	-d | -D | --disable-broken-bridges  Disable broken Bridges in this network connection
-	-e | -E | --enable-all-bridges      Enable all disabled Bridges
-	-r | -R | --reset-tor               restart tor service
-	-u | -U | --uninstall               uninstall Script
-	-h | -H | --help                    show this help
+tbcli -h :
+    -a | -A | --add-bridges             add bridges into /etc/tor/torrc and print bridges
+    -p | -P | --print-only-bridges      just print bridges
+    -d | -D | --disable-broken-bridges  disable broken Bridges in this network connection
+    -c | -C | --clear-broken-bridges    remove all broken briges
+    -e | -E | --enable-all-bridges      rnable all disabled Bridges
+    -r | -R | --reset-tor               restart tor service
+    -u | -U | --uninstall               uninstall Script
+    -h | -H | --help                    show this help
 ```
 
 ## More

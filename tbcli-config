@@ -10,6 +10,10 @@ url_bridges="https://bridges.torproject.org/bridges?transport=obfs4"
 PROGRAM_NAME="tbcli"
 PRJ_FILES="${PROGRAM_NAME} tbcli-config" 
 
+# change variables if you dont use systemd deamon manager  
+tor_restart="systemctl restart tor.service"
+tor_status="systemctl status tor.service"
+
 # temp files 
 HTML_FILE="img.html"
 IMAGE_CAPTCHA_FILE="captcha.jpg"
