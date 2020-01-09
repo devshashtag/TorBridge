@@ -1,24 +1,25 @@
 #!/usr/bin/env bash
 
-# installer tor bridges
-mkdir -p ~/.local/bin
-cd ~/.local/bin
-
 repo="https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/"
 
-# download files
+# Tor Bridges CLI path
+mkdir -p ~/.local/bin
+mkdir -p ~/.config/tbcli 
+
+# ----  download files ----
+cd ~/.local/bin
 curl -s -o tbcli "${repo}tbcli.sh"
-curl -s -o tbcli-config    "${repo}tbcli-config"
+chmod +x tbcli # add execute permission
+# ------ Config file ------
+cd ~/.config/tbcli
+curl -s -o tbcli-config "${repo}tbcli-config"
+chmod +x tbcli-config # add execute permission
 
 # check files
-if [[ ! -e get-tor-bridges && ! -e tbcli-config ]]; then
+if [[ ! -e ~/.local/bin/get-tor-bridges && ! -e ~/.config/tbcli/tbcli-config ]]; then
     echo -e "\e[1;31mrequire files not available . Please Check the Permission or Connection.\e[m"
     exit 1
 fi
-
-# add execute permission
-chmod +x tbcli
-chmod +x tbcli-config 
 
 # shell file config
 shell_file=$HOME/.$(egrep -o "[^/]*$" <<< $SHELL)rc
@@ -26,7 +27,7 @@ shell_file=$HOME/.$(egrep -o "[^/]*$" <<< $SHELL)rc
 # check file exist
 [[ ! -e "$shell_file" ]] && echo -e "\e[1;31mError: \e[1;33mcan't find shell config!\e[m"
 
-# automatically add path program to shell config file jsut support bash and zshrc
+# Automatically add path program to shell config file jsut support bash and zshrc
 if [[ ! -z $(egrep "bash|zsh" <<< $shell_file) ]]; then
     # add path run script into PATH variable
     if [[ -z $(cat $shell_file|egrep "if \[ -e ~/.local/bin \]; then") ]]; then
@@ -47,3 +48,5 @@ fi
 
 echo -e "\e[1;32mScript installed successfully!\e[m"
 echo -e "\e[1;32mPlease Check 'tbcli -h' command\e[m"
+echo -e "\e[1;33mif u want change config tbcli . please check '~/.config/tbcli-conf'.\e[m"
+

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Add config file 
-source tbcli-config 2>/dev/null
+source ~/.config/tbcli/tbcli-config 2>/dev/null
 
 if [[ $? -ne 0 ]] ; then 
     echo -e "\e[1;31mfile tbcli_config Not exist" 
