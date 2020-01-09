@@ -18,6 +18,7 @@ fi
 # usage
 function usage(){
     echo -e "${light_yellow}a simple script for get tor bridge from ${light_magenta}${url_bridges}${nc}"
+    echo -e "${light_yellow}and manage tor service${nc}"
     echo -e "${light_magenta}USAGE :"
     echo -e "${light_green}\t-a | -A | --add-bridges\t\t\t${cyan}add bridges into ${tor_config_file} and print bridges"
     echo -e "${light_green}\t-p | -P | --print-only-bridges\t\t${cyan}just print bridges" 
