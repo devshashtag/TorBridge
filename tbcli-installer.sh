@@ -48,5 +48,5 @@ fi
 
 echo -e "\e[1;32mScript installed successfully!\e[m"
 echo -e "\e[1;32mPlease Check 'tbcli -h' command\e[m"
-echo -e "\e[1;33mdo u want change tbcli config ? please check \e[1;34m~/.config/tbcli-conf.\e[m"
+echo -e "\e[1;33mdo u want change tbcli config ? please check \e[1;34m~/.config/tbcli-config.\e[m"
 

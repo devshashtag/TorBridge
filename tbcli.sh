@@ -283,35 +283,42 @@ trap ClearTmpFiles EXIT
 if [[ ! -z $print_bridges || ! -z $add_bridges ]] ; then 
     BRIDGES=""
     get_tor_bridges
+    echo -e "${light_red}---------------------------------------------------" # separator 
 fi
 
 # print only bridges ( not add )
 if [[ ! -z $print_bridges && -z $add_bridges ]] ; then 
     echo -e "${cyan}${BRIDGES}"
+    echo -e "${light_red}---------------------------------------------------" # separator 
 fi 
 
 # add bridges into tor config file and print bridges 
 if [[ ! -z $add_bridges ]] ; then 
     save_and_print_bridges 
+    echo -e "${light_red}---------------------------------------------------" # separator 
 fi 
 
 # enable all bridges
 if grep -q "\-c" <<< $bridges_manager  ;then  
     clear_broken_bridges
+    echo -e "${light_red}---------------------------------------------------" # separator 
 fi
 
 # enable all bridges
 if grep -q "\-e" <<< $bridges_manager  ;then  
     enable_all_bridges
+    echo -e "${light_red}---------------------------------------------------" # separator 
 fi
 
 # disable broken bridges
 if grep -q "\-d" <<< $bridges_manager ;then
     disable_broken_bridges
+    echo -e "${light_red}---------------------------------------------------" # separator 
 fi
 
 # reset tor service with systemctl
 if grep -q "\-r" <<< $bridges_manager ;then
     reset_tor
+    echo -e "${light_red}---------------------------------------------------" # separator 
 fi
 

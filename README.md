@@ -32,9 +32,9 @@ tbcli -u
 tbcli -h :
     -a | -A | --add-bridges             add bridges into /etc/tor/torrc and print bridges
     -p | -P | --print-only-bridges      just print bridges
-    -d | -D | --disable-broken-bridges  disable broken Bridges in this network connection
+    -d | -D | --disable-broken-bridges  disable broken bridges in this network connection
     -c | -C | --clear-broken-bridges    remove all broken briges
-    -e | -E | --enable-all-bridges      rnable all disabled Bridges
+    -e | -E | --enable-all-bridges      enable all disabled Bridges
     -r | -R | --reset-tor               restart tor service
     -u | -U | --uninstall               uninstall Script
     -h | -H | --help                    show this help
