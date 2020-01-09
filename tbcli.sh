@@ -283,7 +283,9 @@ trap ClearTmpFiles EXIT
 if [[ ! -z $print_bridges || ! -z $add_bridges ]] ; then 
     BRIDGES=""
     get_tor_bridges
-    reset_tor
+    if [[ ! -z $add_bridges ]]; then 
+        reset_tor
+    fi
     echo -e "${light_red}---------------------------------------------------" # separator 
 fi
 
