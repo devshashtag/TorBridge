@@ -134,6 +134,26 @@ function save_and_print_bridges(){
     fi
 }
 
+# enable all broken bridge ( uncomment commented bridges )
+function enable_all_bridges(){
+    # check tor file is exist
+    if [ -e "$tor_config_file" ]; then
+        broken_bridges=$(cat $tor_config_file | egrep "#Bridge obfs4")
+        if [[ ! -z "$broken_bridges" ]]; then 
+            echo -e "${yellow}broken bridges : \n${light_green}" 
+            echo "$broken_bridges"| cud -d " " -f 3 
+            sed -i "s/^#Bridge obfs4/Bridge obfs4/g" "$tor_config_file" # enable all broken bridges
+            echo -e "${light_green}broken bridges Enabled."
+        else
+            echo -e "${light_yellow}All bridges are enable"
+        fi
+        echo -e "${cyan}active bridges : $(cat /etc/tor/torrc |grep ^Bridge|wc -l)${nc}"
+    else
+        echo -e "${red}Tor config file $tor_config_file doesn't exist"
+        exit 0
+    fi
+}
+
 # read 'unable connetion bridges' from status tor and comment broken bridges
 function disable_broken_bridges(){
     # check tor file is exist
@@ -184,27 +204,6 @@ function clear_broken_bridges(){
         echo -e "${red}Tor config file $tor_config_file doesn't exist"
         exit 0
     fi
-}
-
-# enable all broken bridge
-function enable_all_bridges(){
-    # check tor file is exist
-    if [ -e "$tor_config_file" ]; then
-        broken_bridges=$(cat $tor_config_file | egrep "#Bridge obfs4")
-        if [[ ! -z "$broken_bridges" ]]; then 
-            echo -e "${yellow}broken bridges : \n${light_green}" 
-            echo "$broken_bridges"| cud -d " " -f 3 
-            sed -i "s/^#Bridge obfs4/Bridge obfs4/g" "$tor_config_file" # enable all broken bridges
-            echo -e "${light_green}broken bridges Enabled."
-        else
-            echo -e "${light_yellow}All bridges are enable"
-        fi
-        echo -e "${cyan}active bridges : $(cat /etc/tor/torrc |grep ^Bridge|wc -l)${nc}"
-    else
-        echo -e "${red}Tor config file $tor_config_file doesn't exist"
-        exit 0
-    fi
-    
 }
 
 # restart tor with display bar 
@@ -284,6 +283,7 @@ trap ClearTmpFiles EXIT
 if [[ ! -z $print_bridges || ! -z $add_bridges ]] ; then 
     BRIDGES=""
     get_tor_bridges
+    reset_tor
     echo -e "${light_red}---------------------------------------------------" # separator 
 fi
 
@@ -300,12 +300,6 @@ if [[ ! -z $add_bridges ]] ; then
 fi 
 
 # enable all bridges
-if grep -q "\-c" <<< $bridges_manager  ;then  
-    clear_broken_bridges
-    echo -e "${light_red}---------------------------------------------------" # separator 
-fi
-
-# enable all bridges
 if grep -q "\-e" <<< $bridges_manager  ;then  
     enable_all_bridges
     echo -e "${light_red}---------------------------------------------------" # separator 
@@ -314,6 +308,12 @@ fi
 # disable broken bridges
 if grep -q "\-d" <<< $bridges_manager ;then
     disable_broken_bridges
+    echo -e "${light_red}---------------------------------------------------" # separator 
+fi
+
+# clear all broken bridges
+if grep -q "\-c" <<< $bridges_manager  ;then  
+    clear_broken_bridges
     echo -e "${light_red}---------------------------------------------------" # separator 
 fi
 
