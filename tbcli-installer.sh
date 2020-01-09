@@ -50,7 +50,7 @@ else
     echo -e "fi"
     echo -e "\e[1;32mScript installed successfully!\e[m"
     echo -e "\e[1;32mPlease Check 'tbcli -h' command after add path in to shell file\e[m"
-    echo -e "\e[1;33mdo u want change tbcli config ? please check \e[1;34m~/.config/tbcli-config.\e[m"
+    echo -e "\e[1;33mdo u want change tbcli config ? please check \e[1;34m~/.config/tbcli/tbcli-config.\e[m"
 fi
 
 
