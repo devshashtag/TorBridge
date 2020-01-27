@@ -130,7 +130,7 @@ function save_and_print_bridges(){
 
     else
         echo -e "${red}tor config file $tor_config_file doesn't exist"
-        exit 0
+        exit 24
     fi
 }
 
@@ -140,17 +140,27 @@ function enable_all_bridges(){
     if [ -e "$tor_config_file" ]; then
         broken_bridges=$(cat $tor_config_file | egrep "#Bridge obfs4")
         if [[ ! -z "$broken_bridges" ]]; then 
-            echo -e "${yellow}broken bridges : \n${light_green}" 
-            echo "$broken_bridges"| cud -d " " -f 3 
+            echo -e "${yellow}broken bridges : ${light_green}" 
+
+            # display broken bridge 
+            for bridge in $(echo "$broken_bridges"| cut -d " " -f 3); do 
+                echo -e "\t${light_magenta}[${light_yellow}✓${light_magenta}] ${cyan}${bridge}"
+            done
+
+            # enable all broken bridges 
             sed -i "s/^#Bridge obfs4/Bridge obfs4/g" "$tor_config_file" # enable all broken bridges
             echo -e "${light_green}broken bridges Enabled."
+
+            # restart tor in end program 
+            bridges_manager="$bridges_manager -r"
         else
-            echo -e "${light_yellow}All bridges are enable"
+            echo -e "${light_yellow}all bridges are Enable."
         fi
+        # display number of active bridge
         echo -e "${cyan}active bridges : $(cat /etc/tor/torrc |grep ^Bridge|wc -l)${nc}"
     else
         echo -e "${red}Tor config file $tor_config_file doesn't exist"
-        exit 0
+        exit 24
     fi
 }
 
@@ -162,21 +172,23 @@ function disable_broken_bridges(){
         # broken bridges
         broken_bridges=$(systemctl status tor.service |grep "unable" |egrep -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}")
         # check bridges exist
-        [[ ! -z $(echo $broken_bridges|tr -d '\n') ]] &&
-            {
-                echo -e "${light_red}Broken Bridges:"
-                # comment broken bridges 
-                for bridge in ${broken_bridges[@]};do
-                    echo -e "\t${light_magenta}[${light_red}X${light_magenta}] ${cyan}${bridge}"
-                    sed -i "s/^Bridge.*${bridge}/#&/g" "$tor_config_file"
-                done
-                echo -e "${light_yellow}broken bridges successfully disable.${nc}"
-            } ||
-                echo -e "${magenta}All bridges are healthy${nc}"
+        if [[ ! -z $(echo $broken_bridges|tr -d '\n') ]];then
+            echo -e "${light_red}Broken Bridges:"
+            # comment broken bridges 
+            for bridge in ${broken_bridges[@]};do
+                echo -e "\t${light_magenta}[${light_red}X${light_magenta}] ${cyan}${bridge}"
+                sed -i "s/^Bridge.*${bridge}/#&/g" "$tor_config_file"
+            done
+            echo -e "${light_yellow}broken bridges successfully disable.${nc}"
+            # restart tor in end program 
+            bridges_manager="$bridges_manager -r"
+        else
+            echo -e "${magenta}All bridges are healthy${nc}"
+        fi
         echo -e "${cyan}active bridges : $(cat $tor_config_file |grep ^Bridge|wc -l)${nc}"
     else
         echo -e "${red}tor config file $tor_config_file doesn't exist"
-        exit 0
+        exit 24 
     fi
 }
 
@@ -202,25 +214,31 @@ function clear_broken_bridges(){
         echo -e "${cyan}active bridges : $(cat /etc/tor/torrc |grep ^Bridge|wc -l)${nc}"
     else
         echo -e "${red}Tor config file $tor_config_file doesn't exist"
-        exit 0
+        exit 24
     fi
 }
 
 # restart tor with display bar 
 function reset_tor(){
-    # restart tor
-    $tor_restart
-    echo -e "${magenta}wait for restart tor service .."
-    # my tor status bar
-    res=0
-    status=" "
-    sep="${reset_sep}"
-    while [[ "$res" -lt "100" ]];do
-        sleep 0.1
-        res=$($tor_status |egrep -o "Bootstrapped[^%]*" |tail -n 1 |cut -d' ' -f2)
-        [[ -z $(grep "$res" <<< "$status") ]] && status="$res$status" && echo -ne "${sep}${res}"
-    done
-    echo -e "\n"
+    # check tor file is exist
+    if [ -e "$tor_config_file" ]; then
+        # restart tor. def by config file
+        $tor_restart
+        echo -e "${magenta}wait for restart tor service .."
+        # my tor status bar
+        res=0
+        status=" "
+        sep="${reset_sep}"
+        while [[ "$res" -lt "100" ]];do
+            sleep 0.1
+            res=$($tor_status |egrep -o "Bootstrapped[^%]*" |tail -n 1 |cut -d' ' -f2)
+            [[ -z $(grep "$res" <<< "$status") ]] && status="$res$status" && echo -ne "${sep}${res}"
+        done
+        echo
+    else
+        echo -e "${red}Tor config file $tor_config_file doesn't exist"
+        exit 24
+    fi
 }
 
 # uninstall script
@@ -278,6 +296,8 @@ fi
 
 # delete tmp files
 trap ClearTmpFiles EXIT
+
+echo -e "${light_red}---------------------------------------------------" # separator 
 
 # get tor bridgesg
 if [[ ! -z $print_bridges || ! -z $add_bridges ]] ; then 
