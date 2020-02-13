@@ -88,7 +88,7 @@ function get_tor_bridges(){
         --data "captcha_challenge_field=${Cap_Serial}&captcha_response_field=${captcha_security_code}&submit=submit" -o "$BridgeFile"
 
         # cut bridges from html file(if code is incorrect bridges file is empty)
-        RES=$(cat "$BridgeFile" |grep obfs4 |egrep -o "^[^<]*")
+        RES=$(cat "$BridgeFile" |egrep "^obfs4" |egrep -o "^[^<]*")
 
         # if captcha_security_code is correct code save bridges into Variable BRIDGES
         # if incorrect print error
