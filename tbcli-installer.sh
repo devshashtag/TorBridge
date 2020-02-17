@@ -41,7 +41,7 @@ if [[ ! -z $(egrep "bash|zsh" <<< $shell_file) ]]; then
     source "$shell_file"
     echo -e "\e[1;32mScript installed successfully!\e[m"
     echo -e "\e[1;32mPlease Check 'tbcli -h' command\e[m"
-    echo -e "\e[1;33mdo u want change tbcli config ? please check \e[1;34m~/.config/tbcli-config.\e[m"
+    echo -e "\e[1;33mdo u want change tbcli config ? please check \e[1;34m~/.config/tbcli/tbcli-config.\e[m"
 else
     # manual installation
     echo -e "\e[1;33mPlease add these lines to your '${SHELL}' config file and continue with manual installation\e[1;35m"
