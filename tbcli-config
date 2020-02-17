@@ -9,7 +9,13 @@ url_bridges="https://bridges.torproject.org/bridges?transport=obfs4"
 # change variables if you dont use systemd deamon manager  
 tor_restart="systemctl restart tor.service"
 tor_status="systemctl status tor.service"
-
+####
+# if u cant see log tor with systemctl status tor.service 
+#### install : 
+# sudo apt install apparmor-utils
+# sudo aa-complain system_tor
+#### then use this variable 
+# tor_status="sudo systemctl status tor@default.service"
 # temp files 
 HTML_FILE="img.html"
 IMAGE_CAPTCHA_FILE="captcha.jpg"

@@ -170,7 +170,7 @@ function disable_broken_bridges(){
     if [ -e "$tor_config_file" ]; then
         echo -ne "${light_yellow}waiting for find broken bridges:\n\t"
         # broken bridges
-        broken_bridges=$(systemctl status tor.service |grep "unable" |egrep -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}")
+        broken_bridges=$($tor_status |grep "unable" |egrep -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}")
         # check bridges exist
         if [[ ! -z $(echo $broken_bridges|tr -d '\n') ]];then
             echo -e "${light_red}Broken Bridges:"
