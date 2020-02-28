@@ -15,9 +15,16 @@ Install these packages with your package manager:
 4. **feh**
 
 ## install
-**with curl** :
+**curl** :
 ```bash
-curl -s "https://raw.githubusercontent.com/unprogramable/TorBridge/master/tbcli-installer.sh" -o /tmp/tbcli-installer && chmod +x tbcli-installer && sudo ./tbcli-installer
+curl -s "https://raw.githubusercontent.com/unprogramable/TorBridge/master/tbcli-installer"|sudo bash
+```
+
+**local repo** :
+```bash 
+git clone https://github.com/unprogramable/TorBridge.git
+chmod +x tbcli-installer-local
+sudo ./tbcli-installer-local
 ```
 
 ## uninstall 
