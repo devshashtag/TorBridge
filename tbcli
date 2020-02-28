@@ -155,7 +155,7 @@ function enable_all_bridges(){
         echo -e "${light_yellow}all bridges are Enable."
     fi
     # display number of active bridge
-    echo -e "${cyan}active bridges : $(acrive_bridges)${nc}"
+    echo -e "${cyan}active bridges : $(active_bridges)${nc}"
 }
 
 # read 'unable connetion bridges' from status tor and comment broken bridges
@@ -168,7 +168,6 @@ function disable_broken_bridges(){
     # just sellect realy broken bridge not olded broken commented bridges
     for bridge in ${unable_to_connect_bridges[@]};do
         line_bridge=$(grep "$bridge" $tor_config_file)
-        echo $line_bridge 
         if [[ ! -z $line_bridge ]] ; then 
             if ! grep -q "^#" <<< $line_bridge ; then
                 broken_bridges="$broken_bridges $bridge"
