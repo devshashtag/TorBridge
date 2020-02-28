@@ -1,19 +1,29 @@
 #!/usr/bin/env bash
+
+path_config="/etc/tbcli/tbcli.conf"
+path_program="$(which tbcli)"
+
 # Add config file 
-path_config="$(which tbcli|sed 's/\(.*\).local\/bin.*/\1/g').config/tbcli"
-config_file="${path_config}/tbcli-config"
-source "$config_file" 2>/dev/null
+source "${path_config}" 2>/dev/null
 
 if [[ $? -ne 0 ]] ; then 
-    echo -e "\e[1;31mconfig file \e[1;32m${config_file} \e[1;31mnot exist" 
+    echo -e "\e[1;31mconfig file \e[1;32m${path_config} \e[1;31mnot exist" 
     exit 1 
 fi 
 
+# check tor file is exist
+if [ ! -e "$tor_config_file" ]; then
+    echo -e "${red}tor config file $tor_config_file doesn't exist"
+    exit 1 
+fi
+
 # requirements for run this script
-if [[ ! $(which feh) || ! $(which tor) || ! $(which proxychains4) || ! $(which obfs4proxy)  ]]; then
-    echo -e "${light_red}check that programs are installed ? => ( proxychains4 , feh ,tor , obfs4proxy )${nc}"
+if [[ ! $(which feh) || ! $(which tor) || ! $(which proxychains4) || ! $(which obfs4proxy) ]]; then
+    echo -e "${light_red}check that programs are installed: "
+    echo -e "${light_cyan}proxychains \nfeh \ntor \nobfs4proxy${nc}"
     exit 1
 fi
+
 
 # usage
 function usage(){
@@ -107,138 +117,111 @@ function get_tor_bridges(){
 
 # add bridges into tor config file 
 function save_and_print_bridges(){
-    # add Bridges Into torrc
-    if [ -e "$tor_config_file" ]; then
-
-        # add 'UseBridges 1' in to $tor_config_file if not exist
-        if [[ ! $(grep "UseBridges 1" $tor_config_file) ]]; then
-            echo "UseBridges 1" >> $tor_config_file
-        fi
-
-        # add 'ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy' into $tor_config_file if not exist
-        if [[ ! $(grep "ClientTransportPlugin obfs4 exec" $tor_config_file) ]]; then
-            obfs4proxy=$(which obfs4proxy)
-            echo "ClientTransportPlugin obfs4 exec ${obfs4proxy}" >> $tor_config_file
-        fi
-
-        # add bridges
-        echo -e "\n${BRIDGES}" >> $tor_config_file
-        echo -e "${light_magenta}bridges added into ${magenta}${tor_config_file}: \n"
-        
-        # show bridges
-        echo -e "${cyan}${BRIDGES}"
-
-    else
-        echo -e "${red}tor config file $tor_config_file doesn't exist"
-        exit 24
+    # add 'UseBridges 1' in to $tor_config_file if not exist
+    if [[ ! $(grep "UseBridges 1" $tor_config_file) ]]; then
+        echo "UseBridges 1" >> $tor_config_file
     fi
+
+    # add 'ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy' into $tor_config_file if not exist
+    if [[ ! $(grep "ClientTransportPlugin obfs4 exec" $tor_config_file) ]]; then
+        obfs4proxy=$(which obfs4proxy)
+        echo "ClientTransportPlugin obfs4 exec ${obfs4proxy}" >> $tor_config_file
+    fi
+
+    # add bridges
+    echo -e "\n${BRIDGES}" >> $tor_config_file
+    echo -e "${light_magenta}bridges added into ${magenta}${tor_config_file}: \n"
+    
+    # show bridges
+    echo -e "${cyan}${BRIDGES}"
 }
 
 # enable all broken bridge ( uncomment commented bridges )
 function enable_all_bridges(){
-    # check tor file is exist
-    if [ -e "$tor_config_file" ]; then
-        broken_bridges=$(cat $tor_config_file | egrep "#Bridge obfs4")
-        if [[ ! -z "$broken_bridges" ]]; then 
-            echo -e "${yellow}broken bridges : ${light_green}" 
+    broken_bridges=$(cat $tor_config_file | egrep "#Bridge obfs4")
+    if [[ ! -z "$broken_bridges" ]]; then 
+        echo -e "${yellow}broken bridges : ${light_green}" 
 
-            # display broken bridge 
-            for bridge in $(echo "$broken_bridges"| cut -d " " -f 3); do 
-                echo -e "\t${light_magenta}[${light_yellow}✓${light_magenta}] ${cyan}${bridge}"
-            done
+        # display broken bridge 
+        for bridge in $(echo "$broken_bridges"| cut -d " " -f 3); do 
+            echo -e "\t${light_magenta}[${light_yellow}✓${light_magenta}] ${cyan}${bridge}"
+        done
 
-            # enable all broken bridges 
-            sed -i "s/^#Bridge obfs4/Bridge obfs4/g" "$tor_config_file" # enable all broken bridges
-            echo -e "${light_green}broken bridges Enabled."
+        # enable all broken bridges 
+        sed -i "s/^#Bridge obfs4/Bridge obfs4/g" "$tor_config_file" # enable all broken bridges
+        echo -e "${light_green}broken bridges Enabled."
 
-            # restart tor in end program 
-            bridges_manager="$bridges_manager -r"
-        else
-            echo -e "${light_yellow}all bridges are Enable."
-        fi
-        # display number of active bridge
-        echo -e "${cyan}active bridges : $(cat /etc/tor/torrc |grep ^Bridge|wc -l)${nc}"
+        # restart tor in end program 
+        bridges_manager="$bridges_manager -r"
     else
-        echo -e "${red}Tor config file $tor_config_file doesn't exist"
-        exit 24
+        echo -e "${light_yellow}all bridges are Enable."
     fi
+    # display number of active bridge
+    echo -e "${cyan}active bridges : $(cat /etc/tor/torrc |grep ^Bridge|wc -l)${nc}"
 }
 
 # read 'unable connetion bridges' from status tor and comment broken bridges
 function disable_broken_bridges(){
-    # check tor file is exist
-    if [ -e "$tor_config_file" ]; then
-        echo -ne "${light_yellow}waiting for find broken bridges:\n\t"
-        # broken bridges
-        broken_bridges=$($tor_status |grep "unable" |egrep -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}")
-        # check bridges exist
-        if [[ ! -z $(echo $broken_bridges|tr -d '\n') ]];then
-            echo -e "${light_red}Broken Bridges:"
-            # comment broken bridges 
-            for bridge in ${broken_bridges[@]};do
-                echo -e "\t${light_magenta}[${light_red}X${light_magenta}] ${cyan}${bridge}"
-                sed -i "s/^Bridge.*${bridge}/#&/g" "$tor_config_file"
-            done
-            echo -e "${light_yellow}broken bridges successfully disable.${nc}"
-            # restart tor in end program 
-            bridges_manager="$bridges_manager -r"
-        else
-            echo -e "${magenta}All bridges are healthy${nc}"
-        fi
-        echo -e "${cyan}active bridges : $(cat $tor_config_file |grep ^Bridge|wc -l)${nc}"
+    echo -ne "${light_yellow}waiting for find broken bridges:\n\t"
+
+    # broken bridges
+    broken_bridges=$(tor_status |grep "unable" |egrep -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}")
+    
+    # check bridges exist
+    if [[ ! -z $(echo $broken_bridges|tr -d '\n') ]];then
+        echo -e "${light_red}Broken Bridges:"
+        
+        # comment broken bridges 
+        for bridge in ${broken_bridges[@]};do
+            echo -e "\t${light_magenta}[${light_red}X${light_magenta}] ${cyan}${bridge}"
+            sed -i "s/^Bridge.*${bridge}/#&/g" "$tor_config_file"
+        done
+        
+        echo -e "${light_yellow}broken bridges successfully disable.${nc}"
+        
+        # restart tor in end program 
+        bridges_manager="$bridges_manager -r"
     else
-        echo -e "${red}tor config file $tor_config_file doesn't exist"
-        exit 24 
+        echo -e "${magenta}All bridges are healthy${nc}"
     fi
+    echo -e "${cyan}active bridges : $(active_bridges)${nc}"
+        
 }
 
 # remove all broken bridge
 function clear_broken_bridges(){
-    # check tor file is exist
-    if [ -e "$tor_config_file" ]; then
-        broken_bridges=$(cat $tor_config_file | egrep "#Bridge obfs4")
-        if [[ ! -z "$broken_bridges" ]]; then 
-            echo -e "${light_blue}broken bridges : ${light_red}" 
-            echo "$broken_bridges" |cut -d" " -f 3 |sed 's/^/\t/g'
-            echo -ne "${light_magenta}"
-            read -p "do you want to delete broken bridges (y/n): " delete
-            if [[ "$delete" == [yY]* ]]; then 
-                sed -i "/^#Bridge obfs4/ d" "$tor_config_file" # remove all disabled bridges
-                echo -e "${light_green}broken bridges successfully removed."
-            else 
-                echo -e "${light_yellow}remove broken bridges cancelled."
-            fi
-        else
-            echo -e "${light_yellow}you dont have broken bridges"
+    broken_bridges=$(grep "^#Bridge obfs4" $tor_config_file)
+    if [[ ! -z "$broken_bridges" ]]; then 
+        echo -e "${light_blue}broken bridges : ${light_red}" 
+        echo "$broken_bridges" |cut -d" " -f 3 |sed 's/^/\t/g'
+        echo -ne "${light_magenta}"
+        read -p "do you want to delete broken bridges (y/n): " delete
+        if [[ "$delete" == [yY]* ]]; then 
+            sed -i "/^#Bridge obfs4/ d" "$tor_config_file" # remove all disabled bridges
+            echo -e "${light_green}broken bridges successfully removed."
+        else 
+            echo -e "${light_yellow}remove broken bridges cancelled."
         fi
-        echo -e "${cyan}active bridges : $(cat /etc/tor/torrc |grep ^Bridge|wc -l)${nc}"
     else
-        echo -e "${red}Tor config file $tor_config_file doesn't exist"
-        exit 24
+        echo -e "${light_yellow}you dont have broken bridges"
     fi
 }
 
 # restart tor with display bar 
 function reset_tor(){
-    # check tor file is exist
-    if [ -e "$tor_config_file" ]; then
-        # restart tor. def by config file
-        $tor_restart
-        echo -e "${magenta}wait for restart tor service .."
-        # my tor status bar
-        res=0
-        status=" "
-        sep="${reset_sep}"
-        while [[ "$res" -lt "100" ]];do
-            sleep 0.1
-            res=$($tor_status |egrep -o "Bootstrapped[^%]*" |tail -n 1 |cut -d' ' -f2)
-            [[ -z $(grep "$res" <<< "$status") ]] && status="$res$status" && echo -ne "${sep}${res}"
-        done
-        echo
-    else
-        echo -e "${red}Tor config file $tor_config_file doesn't exist"
-        exit 24
-    fi
+    # restart tor. function in config file
+    tor_restart
+    echo -e "${magenta}wait for restart tor service .."
+    # my tor status bar
+    res=0
+    status=" "
+    sep="${reset_sep}"
+    while [[ "$res" -lt "100" ]];do
+        sleep 0.1
+        res=$(tor_status |egrep -o "Bootstrapped[^%]*" |tail -n 1 |cut -d' ' -f2)
+        [[ -z $(grep "$res" <<< "$status") ]] && status="$res$status" && echo -ne "${sep}${res}"
+    done
+    echo
 }
 
 # uninstall script
@@ -247,18 +230,18 @@ function UninstallTBCLI(){
     read -p "Do you want to delete this Script (y/n): " req
     if [[ "$req" == [yY]* ]] ;then 
         echo -e "${light_green}Wait for uninstall ${light_red}...${light_yellow}"
+        directory_conf=$(grep -o "^.*/" <<< "$path_config")
 
-        # define variable ( dont change )
-        path_program="$(which tbcli)"
-        #          tbcli         , tbcli-config
-        PRJ_FILES=("$path_program" "$path_config")
+        #           /usr/bin/tbcli, /etc/tbcli
+        PRJ_FILES=("$path_program" "$directory_conf")
 
-        for tbcli_program_path in ${PRJ_FILES[@]} ;do 
-            if [[ -e "$tbcli_program_path" ]] ;then 
-                echo -e "${light_yellow}program  : ${light_magenta}${tbcli_program_path}"
-                rm -rf "${tbcli_program_path}"
+        for path in ${PRJ_FILES[@]} ;do 
+            if [[ -e "$path" ]] ;then 
+                echo -e "${light_yellow}program  : ${light_magenta}${path}"
+                rm -rf "${path}"
             else
-                echo -e "${light_red}can't remove this path : ${tbcli_program_path} ."
+                echo -e "${light_red}can't remove this path : ${path} ."
+                exit 1
             fi
         done
         echo -e "${light_magenta}Thank you for using."
@@ -282,7 +265,7 @@ while [ "$1" != "" ]; do
         -c | -C | --clear-broken-bridges   ) bridges_manager="$bridges_manager -c" ;; 
         -e | -E | --enable-all-bridges     ) bridges_manager="$bridges_manager -e" ;;
         -r | -R | --reset-tor              ) bridges_manager="$bridges_manager -r" ;;  
-        -u | -U | --uninstall              ) UninstallTBCLI && exit 0 ;;
+        -u | -U | --uninstall              ) uninstall="True" ;;
         -h | -H | --help | *               ) usage && exit 0;;
     esac
     shift
@@ -294,16 +277,23 @@ if [[ $UID -ne 0 ]]; then
     exit 1
 fi
 
-# delete tmp files
-trap ClearTmpFiles EXIT
-
 echo -e "${light_red}---------------------------------------------------" # separator 
 
-# get tor bridgesg
+# uninstall program
+if [[ ! -z $uninstall ]] ; then 
+    UninstallTBCLI
+    echo -e "${light_red}---------------------------------------------------" # separator 
+    exit 0
+fi
+
+# delete my tmp files
+trap ClearTmpFiles EXIT
+
+# get tor bridges
 if [[ ! -z $print_bridges || ! -z $add_bridges ]] ; then 
     BRIDGES=""
     get_tor_bridges
-    bridges_manager="$bridges_manager -r"
+    bridges_manager="$bridges_manager -r" # restart tor in end 
     echo -e "${light_red}---------------------------------------------------" # separator 
 fi
 

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# This script need to run as root
+if [[ $UID -ne 0 ]]; then
+    echo -e "${red}this script must be run as root!${nc}"
+    exit 1
+fi
+
+path_tbcli="/usr/bin/tbcli"
+path_conf="/etc/tbcli/tbcli.conf"
+
+mkdir -p /etc/tbcli 
+
+cp "tbcli"      "$path_tbcli"
+cp "tbcli.conf" "$path_conf"
+
+chmod +x "$path_conf" "$path_tbcli"
+chown $USER "$path_conf" "$path_tbcli"
+
+
+echo -e "\e[1;32mScript installed successfully!"
+echo -e "\e[1;32mPlease Check 'tbcli -h' command"
+echo -e "\e[1;33mdo u want change tbcli config ? \nplease check \e[1;34m${path_conf}\e[m"
+

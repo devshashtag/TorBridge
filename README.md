@@ -1,7 +1,6 @@
 # Tor Bridge cli
 
-**a simple script for get tor bridge from** : `https://bridges.torproject.org/bridges`
-**and manage tor service**
+**a simple script for get tor bridge from** : `https://bridges.torproject.org/bridges` **and manage tor service**
 
 **new version** :
 [![asciicast](https://asciinema.org/a/292599.svg)](https://asciinema.org/a/292599)
@@ -12,19 +11,19 @@
 Install these packages with your package manager:
 1. **tor**
 2. **obfs4proxy**
-3. **proxychains-ng**
+3. **proxychains**
 4. **feh**
 
 ## install
 **with curl** :
 ```bash
-curl -s "https://raw.githubusercontent.com/MicroRobotProgrammer/TorBridge/master/tbcli-installer.sh" |bash
+curl -s "https://raw.githubusercontent.com/unprogramable/TorBridge/master/tbcli-installer.sh" -o /tmp/tbcli-installer && chmod +x tbcli-installer && sudo ./tbcli-installer
 ```
 
 ## uninstall 
 
 ```bash
-tbcli -u 
+sudo tbcli -u 
 ```
 
 ## USAGE

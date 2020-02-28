@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# This script need to run as root
+if [[ $UID -ne 0 ]]; then
+    echo -e "${red}this script must be run as root!${nc}"
+    exit 1
+fi
+
+repo="https://raw.githubusercontent.com/unprogramable/TorBridge/master/"
+
+# Tor Bridges CLI path
+path_tbcli="/usr/bin/tbcli"
+path_conf="/etc/tbcli/tbcli.conf"
+
+mkdir -p /etc/tbcli
+
+# download files
+curl -s "${repo}tbcli"      -o "$path_tbcli" 2>/dev/null
+curl -s "${repo}tbcli.conf" -o "$path_conf"  2>/dev/null
+
+# check files
+if [[ ! "$path_tbcli" && ! -e "$path_conf" ]]; then
+    echo -e "\e[1;31mrequire files not available . Please Check the Permission or Connection."
+    exit 1
+fi
+
+# add execute permission
+chmod +x "$path_conf" "$path_tbcli"
+chown $USER "$path_conf" "$path_tbcli"
+
+echo -e "\e[1;32mScript installed successfully!"
+echo -e "\e[1;32mPlease Check 'tbcli -h' command"
+echo -e "\e[1;33mdo u want change tbcli config ? \nplease check \e[1;34m${path_conf}\e[m"
+
