@@ -27,8 +27,7 @@ fi
 
 # usage
 function usage(){
-    echo -e "${light_yellow}a simple script for get tor bridge from ${light_magenta}${url_bridges}${nc}"
-    echo -e "${light_yellow}and manage tor service${nc}"
+    echo -e "${light_yellow}a simple script for get tor bridge from ${light_magenta}${url_bridges}${light_yellow}and manage tor service"
     echo -e "${light_magenta}USAGE :"
     echo -e "${light_green}\t-a | -A | --add-bridges\t\t\t${cyan}add bridges into ${tor_config_file} and print bridges"
     echo -e "${light_green}\t-p | -P | --print-only-bridges\t\t${cyan}just print bridges" 
@@ -59,14 +58,14 @@ function get_tor_bridges(){
     [[ -z $(cat "$HTML_FILE" 2>/dev/null) ]] && echo "Error TOR" && exit 0
 
     # cut base64 Image challenge and convert to image
-    base64 -i -d <<< $(cat "$HTML_FILE" |egrep -o "\/9j\/[^\"]*") > $IMAGE_CAPTCHA_FILE
+    base64 -i -d <<< $(egrep -o "\/9j\/[^\"]*" "$HTML_FILE") > $IMAGE_CAPTCHA_FILE
 
     # show image captcha security code
     feh "$IMAGE_CAPTCHA_FILE" &
     FEH_PID=$!
 
     # Captcha challenge field ( captcha serial )
-    Cap_Serial=$(cat "$HTML_FILE" |grep value |head -n 1 |cut -d\" -f 2)
+    Cap_Serial=$(grep "value" "$HTML_FILE"|head -n 1 |cut -d\" -f 2)
 
     # captcha security code
     while [[ -z $captcha_security_code ]]; do
@@ -98,12 +97,12 @@ function get_tor_bridges(){
         --data "captcha_challenge_field=${Cap_Serial}&captcha_response_field=${captcha_security_code}&submit=submit" -o "$BridgeFile"
 
         # cut bridges from html file(if code is incorrect bridges file is empty)
-        RES=$(cat "$BridgeFile" |egrep "^obfs4" |egrep -o "^[^<]*")
+        RES=$(grep "^obfs4" "$BridgeFile"|egrep -o "^[^<]*")
 
         # if captcha_security_code is correct code save bridges into Variable BRIDGES
         # if incorrect print error
-        if [[ ! -z $(echo $RES|tr -d '\n') ]]; then
-            BRIDGES=$(echo "$RES" |sed 's/^/Bridge /g')
+        if [[ $(tr -d '\n' <<< "$RES") ]]; then
+            BRIDGES="$(sed 's/^/Bridge /g' <<< "$RES")"
         else
             echo -e "${light_yellow}the code entered is incorrect! try again ..${nc}"
             # for continue while and try again . unset captcha_security_code
@@ -118,27 +117,26 @@ function get_tor_bridges(){
 # add bridges into tor config file 
 function save_and_print_bridges(){
     # add 'UseBridges 1' in to $tor_config_file if not exist
-    if [[ ! $(grep "UseBridges 1" $tor_config_file) ]]; then
+    if ! grep -q "^UseBridges 1" $tor_config_file ; then
         echo "UseBridges 1" >> $tor_config_file
     fi
 
     # add 'ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy' into $tor_config_file if not exist
-    if [[ ! $(grep "ClientTransportPlugin obfs4 exec" $tor_config_file) ]]; then
-        obfs4proxy=$(which obfs4proxy)
-        echo "ClientTransportPlugin obfs4 exec ${obfs4proxy}" >> $tor_config_file
+    if ! grep -q "^ClientTransportPlugin obfs4 exec" $tor_config_file ; then
+        sed -i "/UseBridges 1/a ClientTransportPlugin obfs4 exec $(which obfs4proxy)" $tor_config_file
     fi
 
-    # add bridges
-    echo -e "\n${BRIDGES}" >> $tor_config_file
-    echo -e "${light_magenta}bridges added into ${magenta}${tor_config_file}: \n"
-    
+    # add bridges 
+    sed -i "/ClientTransportPlugin obfs4 exec/a $(sed ':a;N;$!ba;s/\n/\\n/g' <<< $BRIDGES)" "$tor_config_file"
+
     # show bridges
+    echo -e "${light_magenta}bridges added into ${magenta}${tor_config_file}: \n"
     echo -e "${cyan}${BRIDGES}"
 }
 
 # enable all broken bridge ( uncomment commented bridges )
 function enable_all_bridges(){
-    broken_bridges=$(cat $tor_config_file | egrep "#Bridge obfs4")
+    broken_bridges=$(grep "#Bridge obfs4" $tor_config_file)
     if [[ ! -z "$broken_bridges" ]]; then 
         echo -e "${yellow}broken bridges : ${light_green}" 
 
@@ -157,7 +155,7 @@ function enable_all_bridges(){
         echo -e "${light_yellow}all bridges are Enable."
     fi
     # display number of active bridge
-    echo -e "${cyan}active bridges : $(cat /etc/tor/torrc |grep ^Bridge|wc -l)${nc}"
+    echo -e "${cyan}active bridges : $(acrive_bridges)${nc}"
 }
 
 # read 'unable connetion bridges' from status tor and comment broken bridges
@@ -165,8 +163,20 @@ function disable_broken_bridges(){
     echo -ne "${light_yellow}waiting for find broken bridges:\n\t"
 
     # broken bridges
-    broken_bridges=$(tor_status |grep "unable" |egrep -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}")
+    unable_to_connect_bridges=$(tor_status |grep "unable" |egrep -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}"|sort -u)
     
+    # just sellect realy broken bridge not olded broken commented bridges
+    for bridge in ${unable_to_connect_bridges[@]};do
+        line_bridge=$(grep "$bridge" $tor_config_file)
+        echo $line_bridge 
+        if [[ ! -z $line_bridge ]] ; then 
+            if ! grep -q "^#" <<< $line_bridge ; then
+                broken_bridges="$broken_bridges $bridge"
+            fi
+        fi
+
+    done
+
     # check bridges exist
     if [[ ! -z $(echo $broken_bridges|tr -d '\n') ]];then
         echo -e "${light_red}Broken Bridges:"
@@ -174,7 +184,7 @@ function disable_broken_bridges(){
         # comment broken bridges 
         for bridge in ${broken_bridges[@]};do
             echo -e "\t${light_magenta}[${light_red}X${light_magenta}] ${cyan}${bridge}"
-            sed -i "s/^Bridge.*${bridge}/#&/g" "$tor_config_file"
+            sed -i "s/^Bridge.*${bridge}/#&/g" $tor_config_file
         done
         
         echo -e "${light_yellow}broken bridges successfully disable.${nc}"
@@ -210,17 +220,16 @@ function clear_broken_bridges(){
 # restart tor with display bar 
 function reset_tor(){
     # restart tor. function in config file
-    tor_restart
-    sleep 0.5
     echo -e "${magenta}wait for restart tor service .."
+    tor_restart
     # my tor status bar
     res=0
     status=" "
     sep="${reset_sep}"
     while [[ "$res" -lt "100" ]];do
-        sleep 0.5
+        sleep 0.1
         res=$(tor_status |egrep -o "Bootstrapped[^%]*" |tail -n 1 |cut -d' ' -f2)
-        [[ -z $(grep "$res" <<< "$status") ]] && status="$res$status" && echo -ne "${sep}${res}"
+        [[ -z $(grep "$res" <<< "$status") ]] && status="${res}${status}" && echo -ne "${sep}${res}"
     done
     echo
 }
@@ -278,12 +287,12 @@ if [[ $UID -ne 0 ]]; then
     exit 1
 fi
 
-echo -e "${light_red}---------------------------------------------------" # separator 
+echo -e "${red}---------------------------------------------------" # separator 
 
 # uninstall program
 if [[ ! -z $uninstall ]] ; then 
     UninstallTBCLI
-    echo -e "${light_red}---------------------------------------------------" # separator 
+    echo -e "${red}---------------------------------------------------" # separator 
     exit 0
 fi
 
