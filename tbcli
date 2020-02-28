@@ -211,13 +211,14 @@ function clear_broken_bridges(){
 function reset_tor(){
     # restart tor. function in config file
     tor_restart
+    sleep 0.5
     echo -e "${magenta}wait for restart tor service .."
     # my tor status bar
     res=0
     status=" "
     sep="${reset_sep}"
     while [[ "$res" -lt "100" ]];do
-        sleep 0.1
+        sleep 0.5
         res=$(tor_status |egrep -o "Bootstrapped[^%]*" |tail -n 1 |cut -d' ' -f2)
         [[ -z $(grep "$res" <<< "$status") ]] && status="$res$status" && echo -ne "${sep}${res}"
     done
