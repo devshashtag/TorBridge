@@ -194,7 +194,6 @@ function disable_broken_bridges(){
         echo -e "${magenta}All bridges are healthy${nc}"
     fi
     echo -e "${cyan}active bridges : $(active_bridges)${nc}"
-        
 }
 
 # remove all broken bridge
@@ -268,14 +267,16 @@ fi
 
 while [ "$1" != "" ]; do
     case $1 in
-        -a | -A | --add-bridges            ) add_bridges="True" ;;
-        -p | -P | --print-only-bridges     ) print_bridges="True" ;;
-        -d | -D | --disable-broken-bridges ) bridges_manager="$bridges_manager -d" ;;
-        -c | -C | --clear-broken-bridges   ) bridges_manager="$bridges_manager -c" ;; 
-        -e | -E | --enable-all-bridges     ) bridges_manager="$bridges_manager -e" ;;
-        -r | -R | --reset-tor              ) bridges_manager="$bridges_manager -r" ;;  
-        -u | -U | --uninstall              ) uninstall="True" ;;
-        -h | -H | --help | *               ) usage && exit 0;;
+        -a  | -A | --add-bridges            ) add_bridges="True" ;;
+        -p  | -P | --print-only-bridges     ) print_bridges="True" ;;
+        -d  | -D | --disable-broken-bridges ) bridges_manager="$bridges_manager -d" ;;
+        -c  | -C | --clear-broken-bridges   ) bridges_manager="$bridges_manager -c" ;; 
+        -e  | -E | --enable-all-bridges     ) bridges_manager="$bridges_manager -e" ;;
+        -r  | -R | --reset-tor              ) bridges_manager="$bridges_manager -r" ;; 
+        -s  | -S | --status-tor             ) bridges_manager="$bridges_manager -s" ;;
+        -o  | -O | --off-tor                ) bridges_manager="$bridges_manager -o" ;;
+        -u  | -U | --uninstall              ) uninstall="True" ;;
+        -h  | -H | --help | *               ) usage && exit 0;;
     esac
     shift
 done
@@ -286,7 +287,7 @@ if [[ $UID -ne 0 ]]; then
     exit 1
 fi
 
-echo -e "${red}---------------------------------------------------" # separator 
+echo -e "${light_red}---------------------------------------------------" # separator 
 
 # uninstall program
 if [[ ! -z $uninstall ]] ; then 
