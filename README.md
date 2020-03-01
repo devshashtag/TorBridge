@@ -37,14 +37,21 @@ sudo tbcli -u
 **this script need to run as root** (*for get/add/remove/disable/enable bridges and restart tor service*)
 ```bash
 tbcli -h :
-    -a | -A | --add-bridges             add bridges into /etc/tor/torrc and print bridges
-    -p | -P | --print-only-bridges      just print bridges
-    -d | -D | --disable-broken-bridges  disable broken bridges in this network connection
-    -c | -C | --clear-broken-bridges    remove all broken briges
-    -e | -E | --enable-all-bridges      enable all disabled Bridges
-    -r | -R | --reset-tor               restart tor service
-    -u | -U | --uninstall               uninstall Script
-    -h | -H | --help                    show this help
+    a simple script for get tor bridge from https://bridges.torproject.org/bridges?transport=obfs4 and manage tor service
+
+USAGE :
+	-a | -A | --add-bridges	             add bridges into /etc/tor/torrc and print bridges
+	-p | -P | --print-only-bridges       just print bridges
+	-d | -D | --disable-broken-bridges   disable broken bridges in this network connection
+	-c | -C | --clear-broken-bridges     remove all broken bridges from config file /etc/tor/torrc
+	-e | -E | --enable-all-bridges       enable all broken bridges
+	-r | -R | --reset-tor                restart tor service(you can use for start tor btw)
+	-s | -S | --status-tor [length]      status tor service(**no need to root permission, default length is 10**)
+	-o | -O | --off-tor                  stop tor service
+	-u | -U | --uninstall                uninstall Script
+	-h | -H | --help                     show help(**no need to root permission**)
+
+
 ```
 
 ## More
