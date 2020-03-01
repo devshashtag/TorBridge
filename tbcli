@@ -203,11 +203,16 @@ function clear_broken_bridges(){
     broken_bridges=$(grep "^#Bridge obfs4" $tor_config_file)
     if [[ ! -z "$broken_bridges" ]]; then 
         echo -e "${light_blue}broken bridges : ${light_red}" 
-        echo "$broken_bridges" |cut -d" " -f 3 |sed 's/^/\t\\${light_yellow}[\\${red}C\\${light_yellow}]/g'
-        echo -ne "${light_magenta}"
-        read -p "do you want to delete broken bridges (y/n): " delete
+        # colored logo [X] ip:port < bridge
+        logo="\\${nc}\\${light_blue}[\\${light_red}X\\${light_blue}] \\${clear_text}"
+        # change format text to list
+        echo -e  "$(cut -d" " -f 3 <<< "$broken_bridges" |sed "s/^/\t$logo/g")\n"
+        # do u want to remove disabled bridges ?
+        echo -ne "${light_magenta}do you want to delete broken bridges (y/n): "
+        read delete
         if [[ "$delete" == [yY]* ]]; then 
-            sed -i "/^#Bridge obfs4/ d" "$tor_config_file" # remove all disabled bridges
+            # remove all disabled bridges
+            sed -i "/^#Bridge obfs4/ d" "$tor_config_file" 
             echo -e "${light_green}broken bridges successfully removed."
         else 
             echo -e "${light_yellow}remove broken bridges cancelled."
@@ -222,7 +227,7 @@ function status_tor(){
     echo -e "${light_magenta}Tor Status :"
     # start separator
     echo -e "\n\t${status_sep}${status_color}"
-    # status tor
+    # status tor text to menu list + colored important sections + numbered list
     echo -e "$(tor_status "$1" |nl |
                   sed "s/^ \+[0-9]\+/\\${status_num_color}&\\${status_color}/g" |
                   sed "s/\(Bootstrapped[^%]*%\)./\\${status_important}\1\\${status_important_line}/g" |
@@ -237,6 +242,7 @@ function status_tor(){
 
 # stop tor service 
 function stop_tor(){
+    # just stop tor > function > /etc/tbcli/tbcli.conf
     tor_stop
     echo -e "${light_cyan}tor Stoped!"
 }
