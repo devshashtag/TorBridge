@@ -27,18 +27,19 @@ fi
 
 # usage
 function usage(){
-    echo -e "${nc}a simple script for get tor bridge from ${light_magenta}${url_bridges}${nc} and manage tor service\n"
-    echo -e "${light_magenta}USAGE :"
-    echo -e "${light_green}\t-a | -A | --add-bridges\t\t\t${yellow}add bridges into ${tor_config_file} and print bridges"
-    echo -e "${light_green}\t-p | -P | --print-only-bridges\t\t${yellow}just print bridges" 
-    echo -e "${light_green}\t-d | -D | --disable-broken-bridges\t${yellow}disable broken bridges in this network connection"
-    echo -e "${light_green}\t-c | -C | --clear-broken-bridges\t${yellow}remove all broken bridges from config file ${tor_config_file}"
-    echo -e "${light_green}\t-e | -E | --enable-all-bridges\t\t${yellow}enable all broken bridges"
-    echo -e "${light_green}\t-r | -R | --reset-tor\t\t\t${yellow}restart tor service${red}(${light_yellow}you can use for start tor btw${red})"
-    echo -e "${light_green}\t-s | -S | --status-tor [length]\t\t\t${yellow}status tor service${red}(${light_yellow}no need to root permission,default length is 10${red})"
-    echo -e "${light_green}\t-o | -O | --off-tor    \t\t\t${yellow}stop tor service"
-    echo -e "${light_green}\t-u | -U | --uninstall\t\t\t${yellow}uninstall Script"
-    echo -e "${light_green}\t-h | -H | --help\t\t\t${yellow}show help${red}(${light_yellow}no need to root permission${red})"
+    echo -e "${light_green}Usage : ${light_yellow}sudo tbcli [options]\n"
+    echo -e "${nc}a simple script for get tor bridge from ${light_magenta}${url_bridges}${nc}"
+    echo -e "and manage tor service\n\n"
+    echo -e "${light_green}  -a, -A, --add-bridges             ${yellow}add bridges into ${tor_config_file} and print bridges"
+    echo -e "${light_green}  -p, -P, --print-only-bridges      ${yellow}just print bridges" 
+    echo -e "${light_green}  -d, -D, --disable-broken-bridges  ${yellow}disable broken bridges in this network connection"
+    echo -e "${light_green}  -c, -C, --clear-broken-bridges    ${yellow}remove all broken bridges from config file ${tor_config_file}"
+    echo -e "${light_green}  -e, -E, --enable-all-bridges      ${yellow}enable all broken bridges"
+    echo -e "${light_green}  -r, -R, --reset-tor               ${yellow}restart tor service${red}(${light_yellow}you can use for start tor btw${red})"
+    echo -e "${light_green}  -s, -S, --status-tor [length]     ${yellow}status tor service${red}(${light_yellow}no need to root permission,default length is 10${red})"
+    echo -e "${light_green}  -o, -O, --off-tor                 ${yellow}stop tor service"
+    echo -e "${light_green}  -u, -U, --uninstall               ${yellow}uninstall Script"
+    echo -e "${light_green}  -h, -H, --help                    ${yellow}show help${red}(${light_yellow}no need to root permission${red})"
     echo -e "${nc}"
 }
 
@@ -123,7 +124,7 @@ function save_and_print_bridges(){
         echo "UseBridges 1" >> $tor_config_file
     fi
 
-    # add 'ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy' into $tor_config_file if not exist
+    # add 'ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy' into $tor_config_file after 'UseBridges 1' if not exist
     if ! grep -q "^ClientTransportPlugin obfs4 exec" $tor_config_file ; then
         sed -i "/UseBridges 1/a ClientTransportPlugin obfs4 exec $(which obfs4proxy)" $tor_config_file
     fi
@@ -138,7 +139,7 @@ function save_and_print_bridges(){
 
 # enable all broken bridge ( uncomment commented bridges )
 function enable_all_bridges(){
-    broken_bridges=$(grep "#Bridge obfs4" $tor_config_file)
+    broken_bridges=$(grep "^#Bridge obfs4" $tor_config_file)
     if [[ ! -z "$broken_bridges" ]]; then 
         echo -e "${yellow}broken bridges : ${light_green}" 
 
@@ -175,7 +176,6 @@ function disable_broken_bridges(){
                 broken_bridges="$broken_bridges $bridge"
             fi
         fi
-
     done
 
     # check bridges exist
@@ -224,14 +224,15 @@ function clear_broken_bridges(){
 
 # status tor service
 function status_tor(){
-    echo -e "${light_magenta}Tor Status :"
+    echo -e "${nc}Tor Status :"
     # start separator
     echo -e "\n\t${status_sep}${status_color}"
     # status tor text to menu list + colored important sections + numbered list
-    echo -e "$(tor_status "$1" |nl |
-                  sed "s/^ \+[0-9]\+/\\${status_num_color}&\\${status_color}/g" |
+    echo -e "$(tor_status "$1" |
                   sed "s/\(Bootstrapped[^%]*%\)./\\${status_important}\1\\${status_important_line}/g" |
-                  sed "s/\(\t.*\)\(unable [^(]\+\)\(.*\)/\\${status_bad_bridge_line}\1\\${status_bad_bridge}\2\\${status_bad_bridge_line}\3/g" |
+                  # bad line colored
+                  sed "s/\(^.*\)\(unable [^(]\+\)\(.*$\)/\\${status_bad_bridge_line}\1\\${status_bad_bridge}\2\\${status_bad_bridge_line}\3/g" | 
+                  nl | sed "s/^ \+[0-9]\+/\\${status_num_color}&\\${status_color}/g" |
                   sed "s/^/\n/g" |
                   sed 's/\.\s\+/\.\n\t\t/g')"
     # end separator
@@ -319,12 +320,12 @@ if [[ $UID -ne 0 ]]; then
     exit 1
 fi
 
-echo -e "$sep_light_red" # separator 
+echo -e "$sections_sep" # separator 
 
 # uninstall program
 if [[ ! -z $uninstall ]] ; then 
     UninstallTBCLI
-    echo -e "$sep_light_red" # separator 
+    echo -e "$sections_sep" # separator 
     exit 0
 fi
 
@@ -338,47 +339,47 @@ if [[ ! -z $print_bridges || ! -z $add_bridges ]] ; then
     BRIDGES=""
     get_tor_bridges
     bridges_manager="$bridges_manager -r" # restart tor in end 
-    echo -e "$sep_light_red" # separator 
+    echo -e "$sections_sep" # separator 
 fi
 
 # print only bridges ( not add )
 if [[ ! -z $print_bridges && -z $add_bridges ]] ; then 
     echo -e "${cyan}${BRIDGES}"
-    echo -e "$sep_light_red" # separator 
+    echo -e "$sections_sep" # separator 
 fi 
 
 # add bridges into tor config file and print bridges 
 if [[ ! -z $add_bridges ]] ; then 
     save_and_print_bridges 
-    echo -e "$sep_light_red" # separator 
+    echo -e "$sections_sep" # separator 
 fi 
 
 # enable all bridges
 if grep -q "\-e" <<< $bridges_manager  ;then  
     enable_all_bridges
-    echo -e "$sep_light_red" # separator 
+    echo -e "$sections_sep" # separator 
 fi
 
 # disable broken bridges
 if grep -q "\-d" <<< $bridges_manager ;then
     disable_broken_bridges
-    echo -e "$sep_light_red" # separator 
+    echo -e "$sections_sep" # separator 
 fi
 
 # clear all broken bridges
 if grep -q "\-c" <<< $bridges_manager  ;then  
     clear_broken_bridges
-    echo -e "$sep_light_red" # separator 
+    echo -e "$sections_sep" # separator 
 fi
 
 # reset tor service 
 if grep -q "\-r" <<< $bridges_manager ;then
     reset_tor
-    echo -e "$sep_light_red" # separator 
+    echo -e "$sections_sep" # separator 
 fi
 
 # stop tor service 
 if grep -q "\-o" <<< $bridges_manager ;then
     stop_tor
-    echo -e "$sep_light_red" # separator 
+    echo -e "$sections_sep" # separator 
 fi
