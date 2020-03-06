@@ -376,6 +376,7 @@ fi
 if grep -q "\-o" <<< $bridges_manager ;then
     stop_tor
     echo -e "$sections_sep" # separator
+    exit 0
 fi
 
 
