@@ -379,7 +379,6 @@ if grep -q "\-o" <<< $bridges_manager ;then
     exit 0
 fi
 
-
 # reset tor service
 if grep -q "\-r" <<< $bridges_manager ;then
     reset_tor
