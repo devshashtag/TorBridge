@@ -6,6 +6,8 @@
 [![asciicast](https://asciinema.org/a/292599.svg)](https://asciinema.org/a/292599)
 
 **other screenshots** : 
+
+
 ![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/broken-bridges.png)
 
 
