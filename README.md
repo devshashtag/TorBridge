@@ -5,6 +5,17 @@
 **new version** :
 [![asciicast](https://asciinema.org/a/292599.svg)](https://asciinema.org/a/292599)
 
+**other screenshots** : 
+![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/broken-bridges.png)
+
+
+![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/colored_status.png)
+
+
+![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/manage_bridges.png)
+
+
+![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/manage_bridges-1.png)
 
 ## Requirements (before installation)
 **Script runs with tor for now! i'll add a proxy version later**
