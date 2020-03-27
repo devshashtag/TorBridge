@@ -7,10 +7,6 @@
 
 **other screenshots** : 
 
-
-![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/broken-bridges.png)
-
-
 ![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/colored_status.png)
 
 
