@@ -20,9 +20,17 @@
 Install these packages with your package manager:
 1. **tor**
 2. **obfs4proxy**
-3. **proxychains**
+3. **proxychains4**
 4. **feh**
 
+Ubuntu,Debian :
+```bash
+# sudo apt install tor obfs4proxy proxychains4 feh
+```
+Arch Linux :
+```bash
+# sudo pacman -S tor obfs4proxy proxychains-ng feh
+```
 ## install
 **curl** :
 ```bash
