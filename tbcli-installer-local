@@ -5,7 +5,6 @@ if [[ $UID -ne 0 ]]; then
     echo -e "${red}this script must be run as root!${nc}"
     exit 1
 fi
-
 path_tbcli="/usr/bin/tbcli"
 path_conf="/etc/tbcli/tbcli.conf"
 
