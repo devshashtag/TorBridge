@@ -7,13 +7,13 @@
 
 **other screenshots** : 
 
-![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/colored_status.png)
+![alt text](https://raw.githubusercontent.com/DevsHashtag/TorBridge/master/screenshots/colored_status.png)
 
 
-![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/manage_bridges.png)
+![alt text](https://raw.githubusercontent.com/DevsHashtag/TorBridge/master/screenshots/manage_bridges.png)
 
 
-![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/manage_bridges-1.png)
+![alt text](https://raw.githubusercontent.com/DevsHashtag/TorBridge/master/screenshots/manage_bridges-1.png)
 
 ## Requirements (before installation)
 **Script runs with tor for now! i'll add a proxy version later**
@@ -34,12 +34,12 @@ Arch Linux :
 ## install
 **curl** :
 ```bash
-curl -s "https://raw.githubusercontent.com/unprogramable/TorBridge/master/tbcli-installer"|sudo bash
+curl -s "https://raw.githubusercontent.com/DevsHashtag/TorBridge/master/tbcli-installer"|sudo bash
 ```
 
 **local repo** :
 ```bash 
-git clone https://github.com/unprogramable/TorBridge.git
+git clone https://github.com/DevsHashtag/TorBridge.git
 chmod +x tbcli-installer-local
 sudo ./tbcli-installer-local
 ```
