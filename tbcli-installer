@@ -5,7 +5,7 @@ if [[ $UID -ne 0 ]]; then
     echo -e "${red}this script must be run as root!${nc}"
     exit 1
 fi
-repo="https://raw.githubusercontent.com/unprogramable/TorBridge/master/"
+repo="https://raw.githubusercontent.com/DevsHashtag/TorBridge/master/"
 
 # Tor Bridges CLI path
 path_tbcli="/usr/bin/tbcli"
