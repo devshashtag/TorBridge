@@ -1,3 +1,9 @@
+# no longer supported
+This project is no longer supported. 
+And I want to develop a new version of it soon.
+More information will be announced here.
+
+
 # Tor Bridge cli
 
 **a simple script for get tor bridge from** : `https://bridges.torproject.org/bridges` **and manage tor service**
