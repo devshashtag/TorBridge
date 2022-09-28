@@ -75,8 +75,6 @@ USAGE :
 >  Special thanks to : **virtualdemon**
 
 
-
-# no longer supported
-This project is no longer supported. 
-And I want to develop a new version of it soon.
-More information will be announced here.
+# update
+currently im working on automatic solving captcha feature ( using python ) and its works 
+but i need some time to refactor my code.
