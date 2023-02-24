@@ -7,31 +7,39 @@
 
 **other screenshots** : 
 
-![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/colored_status.png)
+![alt text](https://raw.githubusercontent.com/DevsHashtag/TorBridge/master/screenshots/colored_status.png)
 
 
-![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/manage_bridges.png)
+![alt text](https://raw.githubusercontent.com/DevsHashtag/TorBridge/master/screenshots/manage_bridges.png)
 
 
-![alt text](https://raw.githubusercontent.com/unprogramable/TorBridge/master/screenshots/manage_bridges-1.png)
+![alt text](https://raw.githubusercontent.com/DevsHashtag/TorBridge/master/screenshots/manage_bridges-1.png)
 
 ## Requirements (before installation)
 **Script runs with tor for now! i'll add a proxy version later**
 Install these packages with your package manager:
 1. **tor**
 2. **obfs4proxy**
-3. **proxychains**
+3. **proxychains-ng**
 4. **feh**
 
+Ubuntu,Debian :
+```bash
+# sudo apt install tor obfs4proxy proxychains4 feh
+```
+Arch Linux :
+```bash
+# sudo pacman -S tor obfs4proxy proxychains-ng feh
+```
 ## install
 **curl** :
 ```bash
-curl -s "https://raw.githubusercontent.com/unprogramable/TorBridge/master/tbcli-installer"|sudo bash
+curl -s "https://raw.githubusercontent.com/DevsHashtag/TorBridge/master/tbcli-installer"|sudo bash
 ```
 
 **local repo** :
 ```bash 
-git clone https://github.com/unprogramable/TorBridge.git
+git clone https://github.com/DevsHashtag/TorBridge.git
 chmod +x tbcli-installer-local
 sudo ./tbcli-installer-local
 ```
@@ -65,3 +73,8 @@ USAGE :
 
 ## More
 >  Special thanks to : **virtualdemon**
+
+
+# update
+currently im working on automatic solving captcha feature ( using python ) and its works 
+but i need some time to refactor my code.
