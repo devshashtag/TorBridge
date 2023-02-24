@@ -20,7 +20,7 @@
 Install these packages with your package manager:
 1. **tor**
 2. **obfs4proxy**
-3. **proxychains4**
+3. **proxychains-ng**
 4. **feh**
 
 Ubuntu,Debian :
