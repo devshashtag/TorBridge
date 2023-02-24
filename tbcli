@@ -61,14 +61,14 @@ function get_tor_bridges(){
     [[ -z $(cat "$HTML_FILE" 2>/dev/null) ]] && echo "Error TOR" && exit 0
 
     # cut base64 Image challenge and convert to image
-    base64 -i -d <<< $(egrep -o "\/9j\/[^\"]*" "$HTML_FILE") > $IMAGE_CAPTCHA_FILE
+    base64 -i -d <<< $(grep -Eo "/9j/[^\"]*" "$HTML_FILE") > $IMAGE_CAPTCHA_FILE
 
     # show image captcha security code
     feh "$IMAGE_CAPTCHA_FILE" &
     FEH_PID=$!
 
     # Captcha challenge field ( captcha serial )
-    Cap_Serial=$(grep "value" "$HTML_FILE"|head -n 1 |cut -d\" -f 2)
+    capChallenge="$(grep -Eo 'value="[^"]*"' img.html|cut -d\" -f2)"
 
     # captcha security code
     while [[ -z $captcha_security_code ]]; do
@@ -97,10 +97,10 @@ function get_tor_bridges(){
 
         # slove captcha and get Bridges
         proxychains4 -q curl -s "$url_bridges" \
-        --data "captcha_challenge_field=${Cap_Serial}&captcha_response_field=${captcha_security_code}&submit=submit" -o "$BridgeFile"
+        --data "captcha_challenge_field=${capChallenge}&captcha_response_field=${captcha_security_code}" -o "$BridgeFile"
 
         # cut bridges from html file(if code is incorrect bridges file is empty)
-        RES=$(grep "^obfs4" "$BridgeFile"|egrep -o "^[^<]*")
+        RES=$(grep -Eo 'obfs4 [0-9][^<]*' "$BridgeFile")
 
         # if captcha_security_code is correct code save bridges into Variable BRIDGES
         # if incorrect print error
@@ -139,7 +139,7 @@ function save_and_print_bridges(){
 
 # enable all broken bridge ( uncomment commented bridges )
 function enable_all_bridges(){
-    broken_bridges=$(grep "^#Bridge obfs4" $tor_config_file)
+    broken_bridges=$(grep "^# Bridge obfs4" $tor_config_file)
     if [[ ! -z "$broken_bridges" ]]; then
         echo -e "${yellow}broken bridges : ${light_green}"
 
@@ -149,7 +149,7 @@ function enable_all_bridges(){
         done
 
         # enable all broken bridges
-        sed -i "s/^#Bridge obfs4/Bridge obfs4/g" "$tor_config_file" # enable all broken bridges
+        sed -i "s/^# Bridge obfs4/Bridge obfs4/g" "$tor_config_file" # enable all broken bridges
         echo -e "${light_green}broken bridges Enabled."
 
         # restart tor in end program
@@ -166,13 +166,13 @@ function disable_broken_bridges(){
     echo -ne "${light_yellow}waiting for find broken bridges:\n\t"
 
     # broken bridges
-    unable_to_connect_bridges=$(tor_status |grep "unable" |egrep -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}"|sort -u)
+    unable_to_connect_bridges=$(tor_status |grep "unable" |grep -E -o "([0-9]{1,3}.){3}[0-9]{1,3}:[0-9]{2,8}"|sort -u)
 
-    # just sellect realy broken bridge not olded broken commented bridges
+    # just sellect realy broken bridge not old broken commented bridges
     for bridge in ${unable_to_connect_bridges[@]};do
         line_bridge=$(grep "$bridge" $tor_config_file)
         if [[ ! -z $line_bridge ]] ; then
-            if ! grep -q "^#" <<< $line_bridge ; then
+            if ! grep -q "^# " <<< $line_bridge ; then
                 broken_bridges="$broken_bridges $bridge"
             fi
         fi
@@ -185,7 +185,7 @@ function disable_broken_bridges(){
         # comment broken bridges
         for bridge in ${broken_bridges[@]};do
             echo -e "\t${light_magenta}[${light_red}X${light_magenta}] ${cyan}${bridge}"
-            sed -i "s/^Bridge.*${bridge}/#&/g" $tor_config_file
+            sed -i "s/^Bridge.*${bridge}/# &/g" $tor_config_file
         done
 
         echo -e "${light_yellow}broken bridges successfully disable.${nc}"
@@ -200,7 +200,7 @@ function disable_broken_bridges(){
 
 # remove all broken bridge
 function clear_broken_bridges(){
-    broken_bridges=$(grep "^#Bridge obfs4" $tor_config_file)
+    broken_bridges=$(grep "^# Bridge obfs4" $tor_config_file)
     if [[ ! -z "$broken_bridges" ]]; then
         echo -e "${light_blue}broken bridges : ${light_red}"
         # colored logo [X] ip:port < bridge
@@ -212,7 +212,7 @@ function clear_broken_bridges(){
         read delete
         if [[ "$delete" == [yY]* ]]; then
             # remove all disabled bridges
-            sed -i "/^#Bridge obfs4/ d" "$tor_config_file"
+            sed -i "/^# Bridge obfs4/ d" "$tor_config_file"
             echo -e "${light_green}broken bridges successfully removed."
         else
             echo -e "${light_yellow}remove broken bridges cancelled."
@@ -259,7 +259,7 @@ function reset_tor(){
     sep="${reset_sep}"
     while [[ "$res" -lt "100" ]];do
         sleep 0.1
-        res=$(tor_status |egrep -o "Bootstrapped[^%]*" |tail -n 1 |cut -d' ' -f2)
+        res=$(tor_status |grep -E -o "Bootstrapped[^%]*" |tail -n 1 |cut -d' ' -f2)
         [[ -z $(grep "$res" <<< "$status") ]] && status="${res}${status}" && echo -ne "${sep}${res}"
     done
     echo
