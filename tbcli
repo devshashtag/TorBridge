@@ -204,12 +204,13 @@ function clear_broken_bridges(){
     if [[ ! -z "$broken_bridges" ]]; then
         echo -e "${light_blue}broken bridges : ${light_red}"
         # colored logo [X] ip:port < bridge
-        logo="\\${nc}\\${light_blue}[\\${light_red}X\\${light_blue}] \\${clear_text}"
+        logo="\\$nc\\$light_blue[\\${light_red}X\\$light_blue] \\$clear_text"
         # change format text to list
-        echo -e  "$(cut -d" " -f 3 <<< "$broken_bridges" |sed "s/^/\t$logo/g")\n"
+        echo -e  "$(cut -d' ' -f 2-5 <<< "$broken_bridges"|sed "s/^/\t$logo/g"))"
         # do u want to remove disabled bridges ?
-        echo -ne "${light_magenta}do you want to delete broken bridges (y/n): "
+        echo -ne "\n${light_magenta}do you want to delete broken bridges (y/n): "
         read delete
+
         if [[ "$delete" == [yY]* ]]; then
             # remove all disabled bridges
             sed -i "/^# Bridge obfs4/ d" "$tor_config_file"
